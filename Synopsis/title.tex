@@ -1,15 +1,6 @@
 \thispagestyle{empty}
 
-\noindent%
-\begin{tabularx}{\textwidth}{@{}lXr@{}}%
-    & & \large{На правах рукописи}\\
-    \IfFileExists{images/logo.pdf}{\includegraphics[height=2.5cm]{logo}}{\rule[0pt]{0pt}{2.5cm}}  & &
-    \ifnumequal{\value{showperssign}}{0}{%
-        \rule[0pt]{0pt}{1.5cm}
-    }{
-        \includegraphics[height=1.5cm]{personal-signature.png}
-    }\\
-\end{tabularx}
+\noindent\hfill\large{На правах рукописи}\par
 
 \vspace{0pt plus1fill} %число перед fill = кратность относительно некоторого расстояния fill, кусками которого заполнены пустые места
 \begin{center}
@@ -22,7 +13,7 @@
 \thesisTitle}
 
 \vspace{0pt plus3fill} %число перед fill = кратность относительно некоторого расстояния fill, кусками которого заполнены пустые места
-{\large Специальность \thesisSpecialtyNumber\ "---\par <<\thesisSpecialtyTitle>>}
+{\large Специальность: \thesisSpecialtyNumber. \thesisSpecialtyTitle}
 
 \ifdefined\thesisSpecialtyTwoNumber
 {\large Специальность \thesisSpecialtyTwoNumber\ "---\par <<\thesisSpecialtyTwoTitle>>}
@@ -30,7 +21,7 @@
 
 \vspace{0pt plus1.5fill} %число перед fill = кратность относительно некоторого расстояния fill, кусками которого заполнены пустые места
 \Large{Автореферат}\par
-\large{диссертации на соискание учёной степени\par \thesisDegree}
+\large{на соискание учёной степени\par \thesisDegree}
 \end{center}
 
 \vspace{0pt plus4fill} %число перед fill = кратность относительно некоторого расстояния fill, кусками которого заполнены пустые места
@@ -124,9 +115,6 @@ r
     \defenseCouncilNumber,\par
     \defenseSecretaryRegalia
     &
-    \ifnumequal{\value{showsecrsign}}{0}{}{%
-        \includegraphics[width=2cm]{secretary-signature.png}%
-    }%
     &
     \defenseSecretaryFio
 \end{tabularx}
