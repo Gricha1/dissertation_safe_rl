@@ -211,9 +211,8 @@
     \SetWatermarkAngle{45}
 }{}
 
-%%% Цитата, не приводимая в автореферате:
-% возможно, актуальна только для biblatex
-%\newcommand{\citeinsynopsis}[1]{\ifsynopsis\else ~\cite{#1} \fi}
+%%% Цитата, не приводимая в автореферате (убирает предшествующий ~):
+\newcommand{\citeinsynopsis}[1]{\ifsynopsis\unskip\else\cite{#1}\fi}
 
 % если текущий процесс запущен библиотекой tikz-external, то прекомпиляция должна быть включена
 \ifdefined\tikzexternalrealjob

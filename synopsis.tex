@@ -3,7 +3,7 @@
 
 % Откомментируйте, чтобы отключить генерацию закладок в pdf
 % \PassOptionsToPackage{bookmarks=false}{hyperref}
-\documentclass[a5paper,10pt,twoside,openany,article]{memoir} %,draft
+\documentclass[a5paper,10pt,oneside,openany,article]{memoir} %,draft
 
 \input{common/setup}          % общие настройки шаблона
 \input{common/packages}       % Пакеты общие для диссертации и автореферата
@@ -44,8 +44,6 @@
 \input{common/renames}
 
 \input{Synopsis/title}        % Титульный лист
-%\mainmatter                   % В том числе начинает нумерацию страниц арабскими цифрами с единицы
-\mainmatter*                  % Нумерация страниц не изменится, но начнётся с новой страницы
 \input{Synopsis/content}      % Содержание автореферата
 
 %%% Выходные сведения типографии
@@ -72,6 +70,5 @@
 
     Типография \blank[0.5\linewidth]
 \end{center}
-\cleardoublepage
 
 \end{document}

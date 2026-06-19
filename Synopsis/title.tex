@@ -32,7 +32,7 @@
 \thispagestyle{empty}
 \noindent Работа выполнена в {\thesisInOrganization}.
 
-\vspace{0.008\paperheight plus1fill}
+\vspace{0.006\paperheight}
 \noindent%
 \begin{tabularx}{\textwidth}{@{}lX@{}}
     \ifdefined\supervisorTwoFio
@@ -43,14 +43,14 @@
                               \textbf{\supervisorFio}
                               \fi
                               \par
-                              \vspace{0.013\paperheight}
+                              \vspace{0.008\paperheight}
                               \supervisorRegaliaTwo\par
                               \ifdefined\supervisorTwoDead
                               \framebox{\textbf{\supervisorTwoFio}}
                               \else
                               \textbf{\supervisorTwoFio}
                               \fi
-                              \vspace{0.013\paperheight}\\
+                              \vspace{0.008\paperheight}\\
     \else
     Научный руководитель:   & \supervisorRegalia\par
                               \ifdefined\supervisorDead
@@ -58,63 +58,28 @@
                               \else
                               \textbf{\supervisorFio}
                               \fi
-                              \vspace{0.013\paperheight}\\
+                              \vspace{0.008\paperheight}\\
     \fi
-    Официальные оппоненты:  &
-    \ifnumequal{\value{showopplead}}{0}{\vspace{13\onelineskip plus1fill}}{%
-        \textbf{\opponentOneFio,}\par
-        \opponentOneRegalia,\par
-        \opponentOneJobPlace,\par
-        \opponentOneJobPost\par
-        \vspace{0.01\paperheight}
-        \textbf{\opponentTwoFio,}\par
-        \opponentTwoRegalia,\par
-        \opponentTwoJobPlace,\par
-        \opponentTwoJobPost
-    \ifdefined\opponentThreeFio
-        \par
-        \vspace{0.01\paperheight}
-        \textbf{\opponentThreeFio,}\par
-        \opponentThreeRegalia,\par
-        \opponentThreeJobPlace,\par
-        \opponentThreeJobPost
-    \fi
-    }%
-    \vspace{0.013\paperheight} \\
-    \ifdefined\leadingOrganizationTitle
     Ведущая организация:    &
-    \ifnumequal{\value{showopplead}}{0}{\vspace{6\onelineskip plus1fill}}{%
-        \leadingOrganizationTitle
-    }%
-    \fi
+    \leadingOrganizationTitle
+    \\
 \end{tabularx}
-\vspace{0.008\paperheight plus1fill}
+\vspace{0.006\paperheight}
 
 \noindent Защита состоится \defenseDate~на~заседании диссертационного совета \defenseCouncilNumber~при \defenseCouncilTitle~по адресу: \defenseCouncilAddress.
 
-\vspace{0.008\paperheight plus1fill}
+\vspace{0.004\paperheight}
 \noindent С диссертацией можно ознакомиться в библиотеке \synopsisLibrary.
 
-\vspace{0.008\paperheight plus1fill}
-\noindent Отзывы на автореферат в двух экземплярах, заверенные печатью учреждения, просьба направлять по адресу: \defenseCouncilAddress, ученому секретарю диссертационного совета~\defenseCouncilNumber.
-
-\vspace{0.008\paperheight plus1fill}
-\noindent{Автореферат разослан \synopsisDate.}
-
-\noindent Телефон для справок: \defenseCouncilPhone.
-
-\vspace{0.008\paperheight plus1fill}
+\vspace{0pt plus1fill}
 \noindent%
-\begin{tabularx}{\textwidth}{@{}%
->{\raggedright\arraybackslash}b{18em}@{}
->{\centering\arraybackslash}X
-r
-@{}}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}b{0.38\textwidth}>{\raggedleft\arraybackslash}X@{}}
     Ученый секретарь\par
     диссертационного совета\par
     \defenseCouncilNumber,\par
     \defenseSecretaryRegalia
     &
-    &
     \defenseSecretaryFio
 \end{tabularx}
+
+\newpage
