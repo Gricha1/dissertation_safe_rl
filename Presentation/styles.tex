@@ -2,6 +2,12 @@
 % Возможные варианты значений ищите в описании библиотеки beamer
 \usetheme{Pittsburgh}
 \usecolortheme{whale}
+\definecolor{MIPTBlue}{RGB}{22,93,154}
+\setbeamercolor{structure}{fg=MIPTBlue}
+\setbeamercolor{frametitle}{fg=white}
+\setbeamercolor{title}{fg=black}
+\setbeamercolor{block title}{bg=MIPTBlue!15,fg=black}
+\setbeamercolor{block body}{bg=MIPTBlue!4,fg=black}
 
 % \usetheme[secheader]{Boadilla}
 % \usecolortheme{seahorse}
@@ -14,7 +20,7 @@
 \beamertemplatenavigationsymbolsempty
 
 % Размеры шрифтов
-\setbeamerfont{title}{size=\large}
+\setbeamerfont{title}{size=\Large}
 \setbeamerfont{subtitle}{size=\small}
 \setbeamerfont{author}{size=\normalsize}
 \setbeamerfont{institute}{size=\small}
@@ -71,7 +77,7 @@
             \thesisCity, \thesisYear
         \end{beamercolorbox}%
         \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{}%
-            Стр. \insertframenumber{} из \inserttotalframenumber \hspace*{2ex}
+            \insertframenumber{} / \inserttotalframenumber \hspace*{2ex}
         \end{beamercolorbox}}%
     \vskip0pt%
 }

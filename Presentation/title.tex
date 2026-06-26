@@ -32,11 +32,11 @@
 }
 
 %\title{\small{Название презентации}}
-\title{\thesisTitle}
+\title{\textbf{\thesisTitle}}
 \author{%
     \texorpdfstring{%
-        \emph{Выступающий:}~\thesisAuthorShort\\%
-        \emph{Руководитель:}~\supervisorRegaliaShort~\supervisorFioShort\\%
+        \emph{Аспирант:}~\thesisAuthor\\[0.25em]%
+        \emph{Научный руководитель:}~\supervisorRegaliaShort~\supervisorFioShort\\%
         %
     }{\thesisAuthor}%
 }
@@ -48,4 +48,9 @@
         \logo{\includegraphics[width=0.15\textwidth]{images/logo}}
     }{}
 }{}
-\subtitle{Представление на соискание учёной степени \thesisDegree\ по специальности \thesisSpecialtyNumber\ \thesisSpecialtyTitle}
+\subtitle{%
+    Физтех-школа прикладной математики и информатики\\
+    Научно-образовательный центр когнитивного моделирования\\[0.45em]
+    \textit{Доклад об основных результатах диссертации}\\
+    специальность \thesisSpecialtyNumber\ --- \thesisSpecialtyTitle
+}
