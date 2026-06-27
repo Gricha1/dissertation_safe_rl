@@ -64,6 +64,19 @@
 }
 \makeatother
 
+\setbeamerfont{footnote}{size=\scriptsize}
+\setbeamertemplate{footnote}{%
+    \leavevmode%
+    \raisebox{3.6ex}[0pt][0pt]{%
+        \parbox[t]{0.96\paperwidth}{%
+            \noindent%
+            \hbox to 1.2em{\hss\insertfootnotemark\hskip 0.25em}%
+            \insertfootnotetext
+        }%
+    }%
+    \vspace{3.6ex}%
+}
+
 % footer презентации
 \setbeamertemplate{footline}{
     \leavevmode%

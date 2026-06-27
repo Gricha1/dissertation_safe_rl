@@ -69,8 +69,8 @@
     \small
     \textbf{Задачи исследования:}
     \begin{enumerate}
-        \item Проанализировать методы безопасного обучения с подкреплением и
-              среды для их экспериментальной оценки.
+        \item Разработать подход для учёта долгосрочного риска в методах
+              безопасного обучения с подкреплением на основе модели мира.
         \item Исследовать построение и агрегацию функций оценки будущих
               накопленных штрафов в модели мира.
         \item Разработать иерархический метод для уменьшения консервативности
@@ -101,9 +101,7 @@
 \begin{frame}[shrink=8]{Научная новизна}
     \footnotesize
     \begin{enumerate}
-        \item В рамках метода \textbf{SPOWL} (Safe Planning and Policy Optimization
-              via World Model Learning, безопасное планирование и оптимизация
-              стратегии с использованием модели мира) предложена функция оценки
+        \item В рамках метода \textbf{SPOWL} предложена функция оценки
               будущих накопленных штрафов в рамках модели мира для улучшения
               скрытых представлений, а также для более точной оценки
               безопасности траекторий при планировании. Эксперименты на средах
@@ -120,9 +118,10 @@
               лучшего качества в задачах навигации и манипуляции с большим
               горизонтом в сравнении с методами на основе моделей мира в
               безопасном обучении с подкреплением.
-        \item Разработан бенчмарк \textbf{Caged CrafText} для безопасного
-              обучения с подкреплением с естественно-языковыми целями и
-              ограничениями.
+        \item Разработанный бенчмарк \textbf{Caged CrafText} позволяет
+              оценивать способности методов обучения с подкреплением:
+              понимание языка (language understanding), связывание языка с
+              объектами из среды (grounding), память, безопасное исследование.
     \end{enumerate}
 
     \begin{block}{Соответствие паспорту специальности 1.2.1}
@@ -144,9 +143,10 @@
     \end{block}
 \end{frame}
 
-\begin{frame}{Математическая постановка: CMDP}
+\begin{frame}[shrink=10]{Математическая постановка: CMDP}
+    \footnotesize
     \begin{columns}[T,onlytextwidth]
-        \begin{column}{0.53\textwidth}
+        \begin{column}{0.55\textwidth}
             Марковский процесс принятия решений с ограничениями:
             \[
                 \mathcal{M} =
@@ -154,44 +154,65 @@
             \]
             где \(\mathcal{S}\) --- пространство состояний,
             \(\mathcal{A}\) --- пространство действий, \(P\) --- функция
-            переходов, \(r\) --- вознаграждение, \(c\) --- штраф за нарушение
-            ограничения, \(d\) --- допустимый бюджет нарушений.
-
-            \[
+            переходов, \(\pi: \mathcal{S} \to \mathcal{A}\) --- стратегия
+            (распределение над действиями), \(r\) --- вознаграждение,
+            \(c\) --- штраф за нарушение ограничения, \(d\) --- допустимый
+            бюджет нарушений.
+            \vspace{-0.4em}
+            \begin{align*}
                 \max_{\pi}\;
-                J_R(\pi)=
+                J_R(\pi)
+                &=
                 \mathbb{E}_{\pi}\!\left[
-                \sum_{t=0}^{\infty}\gamma^t r(s_t,a_t)\right]
-            \]
-            \[
-                \text{при условии}\qquad
-                J_C(\pi)=
+                \sum_{t=0}^{\infty}\gamma^t r(s_t,a_t)\right], \\
+                \text{при условии}\quad
+                J_C(\pi)
+                &=
                 \mathbb{E}_{\pi}\!\left[
                 \sum_{t=0}^{\infty}\gamma^t c(s_t,a_t)\right]\le d .
-            \]
+            \end{align*}
         \end{column}
-        \begin{column}{0.43\textwidth}
+        \begin{column}{0.41\textwidth}
             \begin{block}{Интерпретация}
-                Стратегия должна максимизировать качество решения задачи,
-                не превышая заданный уровень нарушений безопасности.
+                \scriptsize
+                $r$~--- численно оценивает желаемое поведение агента.
+
+                $c$~--- численно оценивает ограничения.
             \end{block}
             \begin{exampleblock}{Пример}
+                \scriptsize
                 Мобильный робот должен достигнуть цели, не сталкиваясь с
                 препятствиями и не превышая допустимый уровень нарушений.
             \end{exampleblock}
         \end{column}
     \end{columns}
-    \vfill
-    {\scriptsize Источник постановки и сред: Altman, 1999; Ray et al.,
+    \footnotetext[1]{Источник постановки и сред: Altman, 1999; Ray et al.,
     ``Benchmarking Safe Exploration in Deep Reinforcement Learning'', 2019.}
 \end{frame}
 
-\begin{frame}[shrink=7]{Основные подходы к безопасному обучению с подкреплением}
+\begin{frame}[shrink=12]{Основные подходы к безопасному обучению с подкреплением}
+    \footnotesize
+    \setlength{\abovedisplayskip}{0.3em}
+    \setlength{\belowdisplayskip}{0.3em}
     \begin{columns}[T,onlytextwidth]
         \begin{column}{0.49\textwidth}
             \begin{block}{Методы оптимизации стратегии с ограничениями}
-                \textbf{Метод на основе функции Лагранжа}
+                \scriptsize
+                Методы применимы для произвольной CMDP-задачи, но не
+                гарантируют безопасность каждого действия.
 
+                \textbf{Метод на основе функции Лагранжа}
+                \[
+                    \max_{\pi}\;
+                    J_R(\pi)=
+                    \mathbb{E}_{\pi}\!\left[
+                    \sum_{t=0}^{\infty}\gamma^t r(s_t,a_t)\right]
+                \]
+                \[
+                    J_C(\pi)=
+                    \mathbb{E}_{\pi}\!\left[
+                    \sum_{t=0}^{\infty}\gamma^t c(s_t,a_t)\right]\le d .
+                \]
                 \[
                     \mathcal{L}(\pi,\lambda)
                     =
@@ -201,100 +222,97 @@
                 \[
                     \max_{\pi}\min_{\lambda\geq 0}\mathcal{L}(\pi,\lambda).
                 \]
-
                 Если \(J_C(\pi)>d\), множитель \(\lambda\) увеличивается
                 и стратегия сильнее штрафуется за нарушения.
             \end{block}
-
-            \scriptsize
-            \textbf{Плюс:} не требуется известная модель объекта управления.\\
-            \textbf{Минус:} контролируется средний уровень нарушений, но не
-            безопасность каждого действия.
         \end{column}
 
         \begin{column}{0.49\textwidth}
             \begin{block}{Методы на основе фильтрации действий}
+                \scriptsize
                 \textbf{Метод на основе барьерной функции}
 
-                \(h\)~--- барьерная функция
+                \(h\)~--- барьерная функция;
+                \(h(s)\geq 0\)~--- безопасное множество состояний.
 
-                \(h(s)\geq 0\)~--- безопасное множество состояний
-
-                \[
-                    \nabla h(s)^\top\!\bigl(f(s)+g(s)a\bigr)
-                    +\alpha\!\left(h(s)\right)\geq 0 .
-                \]
+                \(a_\pi \sim \pi(\cdot \mid s)\), где \(\pi\) --- стратегия,
+                не учитывающая ограничения безопасности.
                 \[
                     a_{\mathrm{safe}}
                     =
                     \arg\min_a \|a-a_\pi\|^2 .
                 \]
+                \[
+                    \dot{h}(s)
+                    =
+                    \nabla h(s)^\top\!\bigl(f(s)+g(s)a\bigr)
+                    \geq 0 .
+                \]
+                Требуется модель объекта управления \(s = f(s) + g(s)a\).
             \end{block}
-
-            \scriptsize
-            \textbf{Плюс:} может предотвращать небезопасные действия.\\
-            \textbf{Минус:} обычно требует известной модели объекта управления,
-            явного вида функции штрафов, их дифференцируемости и оптимизации на
-            каждом шаге.
         \end{column}
     \end{columns}
 
     \vfill
-    {\scriptsize Источники: Ray et al., 2019; Stooke et al., 2020; Ames et al., 2017; Dalal et al., 2018.}
+    \footnotetext[1]{Источники: Ray et al., 2019; Stooke et al., 2020; Ames et al., 2017; Dalal et al., 2018.}
 \end{frame}
 
-\begin{frame}[shrink=5]{Методы на основе модели мира}
+\begin{frame}[shrink=10]{Методы на основе модели мира}
+    \footnotesize
+    \setlength{\itemsep}{0pt}
     \begin{columns}[T,onlytextwidth]
         \begin{column}{0.52\textwidth}
             \begin{block}{Методы, использующие синтетический опыт и планирование}
                 \textbf{SafeDreamer}
 
-                \vspace{0.2em}
-                использует латентную модель мира, которая предсказывает динамику
-                скрытого состояния, вознаграждение и штрафы для планирования.
-            \end{block}
-
-            \vspace{0.3em}
-            Модель мира обучается предсказывать: \(f_\theta\)~--- динамику среды,
-            \(r_\theta\)~--- модель вознаграждений, \(c_\theta\)~--- модель штрафов:
-            \[
-                \begin{aligned}
-                    \hat{s}_{t+1}&=f_\theta(\hat{s}_t,a_t),\\
-                    \hat r_t&=r_\theta(\hat{s}_t,a_t),\qquad
+                \vspace{-0.1em}
+                Модель мира: \(f_\theta\)~--- динамика, \(r_\theta\)~--- награда,
+                \(c_\theta\)~--- штраф:
+                \[
+                    \hat{s}_{t+1}=f_\theta(\hat{s}_t,a_t),\;
+                    \hat r_t=r_\theta(\hat{s}_t,a_t),\;
                     \hat c_t=c_\theta(\hat{s}_t,a_t).
-                \end{aligned}
-            \]
+                \]
 
-            До выполнения действия агент оценивает кандидатные траектории:
-            \[
-                \max_{a_{0:H-1}}
-                \sum_{t=0}^{H-1}\gamma^t\hat r_t
-                \quad
-                \text{при условии}\quad
-                \sum_{t=0}^{H-1}\gamma^t\hat c_t\leq d.
-            \]
+                Планирование (CEM):
+                \begin{enumerate}
+                    \setlength{\itemsep}{0pt}
+                    \item \(a^{(i)}_{0:H-1}\) — сэмплирование в модели мира;
+                    \item \(\mathcal{T}_{\mathrm{safe}}
+                    =\bigl\{i:\sum_{t=0}^{H-1}\gamma^t\hat c_t^{(i)}\leq d\bigr\}\);
+                    \item \(i^*=\arg\max\limits_{i\in\mathcal{T}_{\mathrm{safe}}}
+                    \sum\limits_{t=0}^{H-1}\gamma^t\hat r_t^{(i)}\).
+                \end{enumerate}
+
+                \vspace{0.2em}
+                Стратегия (обучение в модели мира):
+                \[
+                    \mathcal{L}(\theta)
+                    =-\sum_{t=1}^{T}\mathrm{sg}\bigl(R^{\lambda}(s_t)\bigr)
+                    +\eta\,\mathrm{H}\bigl[\pi_\theta(a_t\mid s_t)\bigr]
+                    -\Psi\bigl(\mathrm{sg}(C^{\lambda}(s_t)),\lambda_p,\mu\bigr).
+                \]
+            \end{block}
         \end{column}
         \begin{column}{0.44\textwidth}
             \begin{block}{Преимущества}
                 \begin{itemize}
-                    \item оценка риска до взаимодействия с реальной средой;
-                    \item планирование и обучение на воображаемых траекториях;
-                    \item более эффективное использование опыта.
+                    \item позволяют генерировать дополнительный синтетический опыт;
+                    \item позволяют планировать в рамках модели мира.
                 \end{itemize}
             \end{block}
 
-            \begin{alertblock}{Текущие проблемы}
-                Проблема смещённой цели (\textit{miss objective}): декодер
-                учится предсказывать ненужную информацию.
-
-                \vspace{0.4em}
-                Короткий горизонт планирования не учитывает штрафы, которые
-                могут возникнуть после окончания кандидатной траектории.
+            \begin{alertblock}{Текущие проблемы SafeDreamer}
+                \begin{itemize}
+                    \item Смещённая цель (\textit{miss objective}): декодер
+                    предсказывает лишнюю информацию.
+                    \item Безопасность траекторий оценивается только при помощи
+                    \(c_\theta\), то есть на коротком горизонте.
+                \end{itemize}
             \end{alertblock}
         \end{column}
     \end{columns}
-    \vfill
-    {\scriptsize Источники: Huang et al., 2024; As et al., 2022; Jayant et al., 2022.}
+    \footnotetext[1]{Источники: Huang et al., 2024; As et al., 2022; Jayant et al., 2022.}
 \end{frame}
 
 \section{SPOWL: оценка риска с помощью модели мира}
@@ -336,16 +354,12 @@
 
             \begin{alertblock}{Оценка будущих накопленных штрафов}
                 \[
-                    Q_C(s,a)=
-                    \mathbb{E}_{\pi}\!\left[
-                    \sum_{k=0}^{\infty}\gamma^k c_{t+k}
-                    \,\middle|\, s_t=s,\;a_t=a
-                    \right].
+                    \hat Q^c_{t,j}=\hat Q^c_j(z_t,a_t)
                 \]
             \end{alertblock}
 
             \scriptsize
-            \(Q_C\) задаёт оценку ожидаемого будущего накопленного штрафа.
+            \(\hat Q^c_j\) задаёт оценку ожидаемого будущего накопленного штрафа.
         \end{column}
     \end{columns}
 \end{frame}
@@ -472,7 +486,7 @@
 \begin{frame}[shrink=8]{Проблема безопасного исследования в задачах с большим горизонтом}
     \begin{columns}[T,onlytextwidth]
         \begin{column}{0.43\textwidth}
-            \begin{alertblock}{Почему задача сложна}
+            \begin{alertblock}{Признаки большого горизонта}
                 В задачах с большим горизонтом агенту требуется найти
                 длинную безопасную последовательность действий до получения
                 полезного сигнала.
@@ -481,9 +495,7 @@
             \begin{itemize}
                 \item большая последовательность шагов до цели;
                 \item разреженное вознаграждение;
-                \item большое пространство состояний и действий;
-                \item ограничения безопасности могут преждевременно
-                      подавлять исследование.
+                \item большое пространство состояний и действий.
             \end{itemize}
         \end{column}
 
@@ -496,7 +508,7 @@
             \textbf{SafeAntMaze-C}
             \vspace{0.1em}
 
-            \tiny
+            {\tiny
             \setlength{\tabcolsep}{0.5pt}
             \renewcommand{\arraystretch}{0.72}
             \resizebox{0.74\linewidth}{!}{%
@@ -512,12 +524,15 @@
                 TD3LAG & \(0.13 \pm 0.33\) & \(133.45 \pm 184.4\) \\
                 \bottomrule
             \end{tabular}%
-            }
+            }}
 
             \vspace{0.45em}
             \textbf{SafePusher}
             \vspace{0.1em}
 
+            {\tiny
+            \setlength{\tabcolsep}{0.5pt}
+            \renewcommand{\arraystretch}{0.72}
             \resizebox{0.74\linewidth}{!}{%
             \begin{tabular}{lcc}
                 \toprule
@@ -530,7 +545,7 @@
                 PPOLAG & \(0\) & \(51.25 \pm 1.25\) \\
                 \bottomrule
             \end{tabular}%
-            }
+            }}
         \end{column}
     \end{columns}
 \end{frame}
@@ -538,65 +553,24 @@
 \section{Безопасное исследование: SG-Safe}
 
 \begin{frame}{SG-Safe: направленное исследование через подцели}
-    \begin{columns}[T,onlytextwidth]
-        \begin{column}{0.47\textwidth}
-            \centering
-            \includegraphics[width=\linewidth]{article_idea_env}
+    \centering
+    \includegraphics[width=0.72\linewidth]{method_scheme_3}
 
-            \vspace{0.3em}
-            \scriptsize
-            Одноуровневая стратегия может не найти путь к удалённой цели;
-            подцели направляют безопасное исследование.
-        \end{column}
-        \begin{column}{0.50\textwidth}
-            \centering
-            \includegraphics[width=\linewidth]{method_scheme_3}
-
-            \vspace{0.3em}
-            \scriptsize
-            Промежуточные подцели декомпозируют задачу, направляют исследование
-            и упрощают достижение цели; при обучении --- дополнительный сигнал,
-            при исполнении --- только безопасная стратегия.
-        \end{column}
-    \end{columns}
+    \vspace{0.5em}
+    {\scriptsize
+    Промежуточные подцели декомпозируют задачу, направляют исследование
+    и упрощают достижение цели; при обучении --- дополнительный сигнал,
+    при исполнении --- только безопасная стратегия.}
 \end{frame}
 
-\begin{frame}[shrink=8]{SG-Safe: функции оптимизации стратегий}
+\begin{frame}[shrink=10]{SG-Safe: функции оптимизации стратегий}
     \scriptsize
     \begin{columns}[T,onlytextwidth]
         \begin{column}{0.49\textwidth}
-            \textbf{Стратегия генерации подцелей}
-            \[
-                \pi^H =
-                \arg\max_{\pi}
-                \mathbb{E}\!\left[
-                    A^{\pi^H_k}(s_g\mid s,g)
-                \right],
-            \]
-            \[
-                D_{\mathrm{KL}}\!\left(
-                    \pi^H(\cdot\mid s,g)\,\|\,p_s(\cdot)
-                \right)\leq\varepsilon .
-            \]
-            \[
-                A^{\pi^H_k}(\hat s_g\mid s,g)
-                =
-                \mathbb{E}\!\left[
-                    \psi_{\pi_\theta}(\hat s_g\mid s,g)
-                    -
-                    \psi_{\pi_\theta}(s_g\mid s,g)
-                \right],
-            \]
-            \[
-                \psi_{\pi_\theta}(s_g\mid s,g)
-                =
-                \max\!\left(
-                    |V^{\pi_\theta}(s,s_g)|,\,
-                    |V^{\pi_\theta}(s_g,g)|
-                \right).
-            \]
+            \textbf{Стратегия генерации подцелей (SAC) базируется на подходе
+            RIS\footnotemark[1].}
 
-            Здесь \(V^{\pi_\theta}(s,g)\) --- ожидаемое дисконтированное
+            \(V^{\pi_\theta}(s,g)\) --- ожидаемое дисконтированное
             вознаграждение при достижении цели \(g\) из состояния \(s\):
             \[
                 V^{\pi_\theta}(s,g)
@@ -607,27 +581,37 @@
                     \,\middle|\,s_0=s
                 \right].
             \]
-        \end{column}
-        \begin{column}{0.49\textwidth}
-            \textbf{Критики награды и штрафов}
+            При \(r=-1\) величина \(V^{\pi_\theta}(s,g)\) равна количеству
+            шагов от \(s\) до \(g\).
             \[
-                Q_r^{\pi_\theta}(s,a,g)
+                \psi_{\pi_\theta}(s_g\mid s,g)
                 =
-                \mathbb{E}_{\pi_\theta}\!\left[
-                    \sum_{t=0}^{\infty}\gamma^t r_t
-                    \,\middle|\,s_0=s,a_0=a,g
+                \max\!\left(
+                    |V^{\pi_\theta}(s,s_g)|,\,
+                    |V^{\pi_\theta}(s_g,g)|
+                \right).
+            \]
+            Минимизация \(\psi_{\pi_\theta}\) заставляет подцель быть по
+            середине пути от \(s\) до \(g\).
+
+            \[
+                \pi^H =
+                \arg\max_{\pi}
+                \mathbb{E}\!\left[
+                    -\psi_{\pi_\theta}(s_g\mid s,g)
                 \right],
             \]
             \[
-                Q_c^{\pi_\theta}(s,a,g)
-                =
-                \mathbb{E}_{\pi_\theta}\!\left[
-                    \sum_{t=0}^{\infty}\gamma^t c_t
-                    \,\middle|\,s_0=s,a_0=a,g
-                \right].
+                D_{\mathrm{KL}}\!\left(
+                    \pi^H(\cdot\mid s,g)\,\|\,p_s(\cdot)
+                \right)\leq\varepsilon .
             \]
 
-            \textbf{Безопасная стратегия}
+            \vfill
+            \(p_s(\cdot)\) --- распределение состояний в среде.
+        \end{column}
+        \begin{column}{0.49\textwidth}
+            \textbf{Безопасная стратегия (SAC-LAG + HER)}
             \[
                 \begin{aligned}
                 J(\pi_\theta)=\mathbb{E}\big[&
@@ -645,15 +629,37 @@
                 \scriptsize\textcolor{red}{Компонента для усиления исследования}
             \end{center}
 
+            \scriptsize
+            \(\pi_\theta(\cdot\mid s,g)\) --- действие, направленное на
+            конечную цель \(g\); \(\pi_\theta(\cdot\mid s,s_g)\) --- действие,
+            направленное на подцель \(s_g\).
+
             \begin{itemize}
-                \item опыт переиспользуется с помощью HER;
                 \item \(Q_r\) оценивает будущую награду, \(Q_c\) ---
-                      будущие накопленные штрафы;
-                \item выделенная KL-добавка направляет действия к подцели
-                      и улучшает безопасное исследование.
+                      будущие накопленные штрафы.
             \end{itemize}
+
+            \[
+                Q_r^{\pi_\theta}(s,a,g)
+                =
+                \mathbb{E}_{\pi_\theta}\!\left[
+                    \sum_{t=0}^{\infty}\gamma^t r_t
+                    \,\middle|\,s_0=s,a_0=a,g
+                \right],
+            \]
+            \[
+                Q_c^{\pi_\theta}(s,a,g)
+                =
+                \mathbb{E}_{\pi_\theta}\!\left[
+                    \sum_{t=0}^{\infty}\gamma^t c_t
+                    \,\middle|\,s_0=s,a_0=a,g
+                \right].
+            \]
         \end{column}
     \end{columns}
+
+    \footnotetext[1]{RIS: Chane-Sane, Schmid, Laptev. Goal-conditioned reinforcement
+    learning with imagined subgoals. ICML, 2021.}
 \end{frame}
 
 \begin{frame}[shrink=8]{SG-Safe: эксперименты на POLAMP}
@@ -761,7 +767,7 @@
 
 \section{Безопасная иерархия: ITES}
 
-\begin{frame}[shrink=5]{Развитие иерархического безопасного обучения с подкреплением с использованием модели мира}
+\begin{frame}[shrink=12]{ITES: иерархическая структура и функции потерь}
     \begin{block}{Развитие иерархического безопасного обучения}
         \small
         В SG-Safe подцели направляют исследование, однако их безопасность явно
@@ -770,11 +776,7 @@
         и при их достижении. Декомпозиция позволяет применять модель мира на
         коротком горизонте в задачах с длинной последовательностью действий.
     \end{block}
-    \centering
-    \includegraphics[height=0.56\textheight]{conceptual_scheme}
-\end{frame}
-
-\begin{frame}[shrink=10]{ITES: иерархическая структура и функции потерь}
+    \vspace{-0.2em}
     \begin{columns}[T,onlytextwidth]
         \begin{column}{0.44\textwidth}
             \begin{block}{Иерархия}
@@ -824,7 +826,7 @@
             \begin{block}{Два сигнала безопасности}
                 \small
                 Модель штрафов возвращает вероятность того, что подцель
-                принадлежит безопасному множеству:
+                находится в безопасном множестве:
                 \[
                 C_M(s_g,s)
                 =\Pr(s_g\in\mathcal{S}_{safe}\mid s)\in[0,1].
@@ -980,28 +982,13 @@
 
 \begin{frame}{ITES: абляция компонентов безопасности}
     \centering
-    \begin{columns}[T,onlytextwidth]
-        \begin{column}{0.49\textwidth}
-            \centering
-            \includegraphics[width=\linewidth]{Ablation_SafeAntMazeCshape_3}
-        \end{column}
-        \begin{column}{0.49\textwidth}
-            \centering
-            \includegraphics[width=\linewidth]{Ablation_PointGoal1_2}
-        \end{column}
-    \end{columns}
+    \includegraphics[width=0.72\linewidth]{Ablation_SafeAntMazeCshape_3}
 
-    \vspace{0.2em}
-    \includegraphics[width=0.55\linewidth]{Ablation_PointGoal1_Q_cost}
-
-    \vspace{0.15em}
+    \vspace{0.3em}
     \parbox{0.96\linewidth}{\scriptsize
-    \textbf{Слева}: анализ безопасности на нижнем и верхнем уровнях
-    (ITES w/o LLS и ITES w/o HLS на SafeAntMazeCshape).
-    \textbf{Справа}: сравнение ITES без верхнеуровневой стратегии и
-    полного ITES на PointGoal1.
-    \textbf{Снизу}: сравнение ITES и ITES без верхнеуровневого
-    критика штрафов \(Q^h_c\) на PointGoal1.
+    Анализ безопасности на нижнем и верхнем уровнях: ITES w/o LLS~---
+    без безопасности на нижнем уровне; ITES w/o HLS~---
+    без безопасности на верхнем уровне (SafeAntMazeCshape).
     Усреднение по 5 запускам.}
 \end{frame}
 
@@ -1173,8 +1160,21 @@
         \item SG-Safe и ITES применимы к адаптации мобильных роботов в задачах
               автономной инспекции, патрулирования, обследования аварийных зон,
               навигации в шахтах и других труднодоступных пространствах.
-        \item Репозитории с открытым кодом: SPOWL\footnote{\url{https://github.com/AIRI-Institute/SPOWL}}, SG-Safe\footnote{\url{https://github.com/Gricha1/SPEIS}}, ITES\footnote{\url{https://github.com/Gricha1/ITES_alg}}, CrafText\footnote{\url{https://github.com/AIRI-Institute/CrafText}}, Caged CrafText\footnote{\url{https://github.com/Gricha1/CAGED-CrafText}}.
+        \item Репозитории с открытым кодом:
+              SPOWL\textsuperscript{1},
+              SG-Safe\textsuperscript{2},
+              ITES\textsuperscript{3},
+              CrafText\textsuperscript{4},
+              Caged CrafText\textsuperscript{5}.
     \end{itemize}
+    \vspace{0.4em}
+    {\scriptsize
+    \setlength{\parskip}{0.12em}%
+    \textsuperscript{1}\,\url{https://github.com/AIRI-Institute/SPOWL}\par
+    \textsuperscript{2}\,\url{https://github.com/Gricha1/SPEIS}\par
+    \textsuperscript{3}\,\url{https://github.com/Gricha1/ITES_alg}\par
+    \textsuperscript{4}\,\url{https://github.com/AIRI-Institute/CrafText}\par
+    \textsuperscript{5}\,\url{https://github.com/Gricha1/CAGED-CrafText}}
 \end{frame}
 
 \begin{frame}[shrink=5]{Публикации и апробация по теме диссертационной работы}
