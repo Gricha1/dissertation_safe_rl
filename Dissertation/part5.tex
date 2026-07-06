@@ -187,20 +187,29 @@ PPO-Cost за счёт фиксированного штрафного коэф�
 
 Также видно, что PPO-LAG и PPO-Cost крайне плохо работают на задачах поддержания здоровья и отношенческих задачах, требующих рассуждения и долгосрочного планирования. В задаче Maintain \cagedemj{health.png} $\geq 5$ PPO-LAG достигает только $R=0.02$, а PPO-Cost --- $R=0.08$, что существенно ниже результата PPO, равного $R=0.23$. Аналогично, в отношенческих задачах Find source of \cagedemj{drink.png} и Find source of \cagedemj{food.png} оба безопасных подхода показывают минимальную награду ($R=0.03$--$0.04$), сохраняя при этом высокие штрафы ($C=11.80$--$13.40$). Такое низкое качество связано со сложностью одновременного управления несколькими ресурсными ограничениями, такими как вода и голод, при сохранении уровня здоровья и безопасности. Это требует более сложного рассуждения и долгосрочного планирования, которых не хватает современным методам безопасного обучения с подкреплением.
 
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=0.55\linewidth,keepaspectratio]{Images/Caged.png}
+\caption{\textbf{Сравнение базовых методов на наборе Caged}. $R$ --- эпизодическое вознаграждение, $C$ --- эпизодический штраф.}
+\label{fig:baselines_comparison_caged_dataset}
+\end{figure}
+
 \subsection{Проблема безопасного исследования}
 \label{sec:craftext_rq2}
 
 \begin{figure}[!ht]
 \noindent
-\begin{minipage}[t]{0.505\linewidth}
+\begin{minipage}[t]{0.495\linewidth}
   \centering
-  \includegraphics[width=\linewidth,height=0.76\textheight,keepaspectratio]{Images/Main_dataset.png}
+  \includegraphics[width=\linewidth,height=0.72\textheight,keepaspectratio]{Images/Main_dataset.png}
+  \captionsetup{width=\linewidth,skip=4pt}
   \captionof{figure}{\textbf{Сравнение базовых методов на основном наборе задач}. $R$ --- эпизодическое вознаграждение, $C$ --- эпизодический штраф.}
   \label{fig:baselines_comparison_main}
 \end{minipage}\hfill
-\begin{minipage}[t]{0.505\linewidth}
+\begin{minipage}[t]{0.495\linewidth}
   \centering
-  \includegraphics[width=\linewidth,height=0.76\textheight,keepaspectratio]{Images/bugetary_debug_dataset.png}
+  \includegraphics[width=\linewidth,height=0.72\textheight,keepaspectratio]{Images/bugetary_debug_dataset.png}
+  \captionsetup{width=\linewidth,skip=4pt}
   \captionof{figure}{\textbf{Сравнение базовых методов на бюджетных ограничениях}. $R$ --- эпизодическое вознаграждение, $C$ --- эпизодический штраф.}
   \label{fig:baselines_comparison_budgeraty}
 \end{minipage}
@@ -209,14 +218,6 @@ PPO-Cost за счёт фиксированного штрафного коэф�
 Рис.~\ref{fig:baselines_comparison_main} и рис.~\ref{fig:baselines_comparison_caged_dataset} показывают кривые обучения базовых моделей на основном наборе задач и на наборе Caged. Безопасные подходы PPO-LAG и PPO-Cost успешно решают только набор Mathematical All. Во всех остальных задачах агенты остаются безопасными, но не увеличивают эпизодическое вознаграждение, что указывает на слабую способность к безопасному исследованию.
 
 Например, на рис.~\ref{fig:baselines_comparison_budgeraty} при бюджетных ограничениях Maintain \cagedemj{drink.png} $\geq 5$ агент учится находиться рядом с источником воды, чтобы быстро восполнять её уровень, и при этом не пытается исследовать среду. Ограничение Maintain \cagedemj{energy.png} $\geq 5$ оказывается наиболее простым для агента, поскольку требует выполнения одного действия --- сна, которое не мешает исследованию среды и поддержанию уровня энергии.
-
-\FloatBarrier
-\begin{figure}[H]
-\centering
-\includegraphics[height=0.24\textheight,keepaspectratio]{Images/Caged.png}
-\caption{\textbf{Сравнение базовых методов на наборе Caged}. $R$ --- эпизодическое вознаграждение, $C$ --- эпизодический штраф.}
-\label{fig:baselines_comparison_caged_dataset}
-\end{figure}
 
 \begin{figure}[!ht]
 \centering

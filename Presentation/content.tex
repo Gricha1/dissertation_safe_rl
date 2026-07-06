@@ -26,12 +26,12 @@
     \vspace{0.1em}
     \centering
     \normalsize
-    Необходима адаптация робота (агента) непосредственно в реальной среде
+    Решение проблемы --- дообучение робота в реальном мире
 
     \vspace{0.3em}
     \begin{columns}[T,onlytextwidth]
         \begin{column}{0.55\textwidth}
-            \begin{block}{Обучение с подкреплением}
+            \begin{block}{Обучение с подкреплением (RL)}
                 Агент обучается методом проб и ошибок непосредственно при
                 взаимодействии со средой.
 
@@ -51,14 +51,15 @@
             \end{alertblock}
         \end{column}
     \end{columns}
-    \vfill
-    \begin{block}{Безопасное обучение с подкреплением (Safe RL)}
-        Агент должен одновременно исследовать среду, достигать цели и соблюдать
-        ограничения безопасности во время обучения и исполнения.
+    \vspace{0.3em}
+    \begin{block}{Безопасное обучение с подкреплением (SafeRL)}
+        Проблемой безопасного исследования занимается область Безопасного
+        обучения с подкреплением (SafeRL).
     \end{block}
 \end{frame}
 
 \begin{frame}{Цель и задачи исследования}
+    \small
     \begin{block}{Цель работы}
         Исследование и разработка методов безопасного обучения с подкреплением,
         которые используют модели мира и иерархическую структуру поведения для
@@ -66,15 +67,16 @@
         безопасности в робототехнических задачах.
     \end{block}
 
-    \small
+    \footnotesize
     \textbf{Задачи исследования:}
     \begin{enumerate}
+        \item Провести анализ существующих методов безопасного обучения с
+              подкреплением и сред, используемых для их экспериментальной
+              оценки.
         \item Разработать подход для учёта долгосрочного риска в методах
               безопасного обучения с подкреплением на основе модели мира.
-        \item Исследовать построение и агрегацию функций оценки будущих
-              накопленных штрафов в модели мира.
-        \item Разработать иерархический метод для уменьшения консервативности
-              безопасной стратегии и улучшения исследования среды.
+        \item Разработать подход на основе иерархического обучения с
+              подкреплением для решения задачи безопасного исследования.
         \item Разработать метод генерации безопасных подцелей с использованием
               модели мира для задач с большим горизонтом.
         \item Разработать бенчмарк для обучения и оценки методов безопасного
@@ -147,7 +149,8 @@
     \footnotesize
     \begin{columns}[T,onlytextwidth]
         \begin{column}{0.55\textwidth}
-            Марковский процесс принятия решений с ограничениями:
+            Задача безопасного исследования формализуется при помощи
+            марковского процесса принятия решений с ограничениями:
             \[
                 \mathcal{M} =
                 \langle \mathcal{S},\mathcal{A},P,r,c,\gamma,d \rangle ,
@@ -266,31 +269,39 @@
                 \textbf{SafeDreamer}
 
                 \vspace{-0.1em}
-                Модель мира: \(f_\theta\)~--- динамика, \(r_\theta\)~--- награда,
-                \(c_\theta\)~--- штраф:
+                Модель мира: \(g_\theta\)~--- декодер,
+                \(f_\theta\)~--- динамика, \(r_\theta\)~--- награда,
+                \(c_\theta\)~--- штраф (\(f,r,c\) на входе берут \(z_t\)):
                 \[
-                    \hat{s}_{t+1}=f_\theta(\hat{s}_t,a_t),\;
-                    \hat r_t=r_\theta(\hat{s}_t,a_t),\;
-                    \hat c_t=c_\theta(\hat{s}_t,a_t).
+                    \hat{s}_t=g_\theta(z_t),\;
+                    \hat{z}_{t+1}=f_\theta(z_t,a_t),\;
+                    \hat r_t=r_\theta(z_t,a_t),\;
+                    \hat c_t=c_\theta(z_t,a_t).
                 \]
 
                 Планирование (CEM):
+                \vspace{-0.15em}
                 \begin{enumerate}
                     \setlength{\itemsep}{0pt}
-                    \item \(a^{(i)}_{0:H-1}\) — сэмплирование в модели мира;
-                    \item \(\mathcal{T}_{\mathrm{safe}}
-                    =\bigl\{i:\sum_{t=0}^{H-1}\gamma^t\hat c_t^{(i)}\leq d\bigr\}\);
-                    \item \(i^*=\arg\max\limits_{i\in\mathcal{T}_{\mathrm{safe}}}
-                    \sum\limits_{t=0}^{H-1}\gamma^t\hat r_t^{(i)}\).
+                    \item \(a_t \sim \mathcal{N}^{t}(\mu_a^{t}, \sigma_a^{t})\),
+                    \(t = 0, \ldots, H-1\);\\
+                    \(\tau=(z_t,a_t,\ldots,z_{t+H},a_{t+H}),\;
+                    z_{t+1}=f(z_t,a_t)\).
+                    \item \(J_{\mathrm{local}}(\tau^{(i)})
+                    =\sum\limits_{t=0}^{H-1}\gamma^t\hat c_t^{(i)}\),
+                    \(\mathcal{T}_{\mathrm{safe}}
+                    =\bigl\{i:J_{\mathrm{local}}(\tau^{(i)})\leq d\bigr\}\);
+                    \item \(J_{\mathrm{local}}^R(\tau^{(i)})
+                    =\sum\limits_{t=0}^{H-1}\gamma^t\hat r_t^{(i)}\),
+                    \(\mathcal{T}_{\mathrm{elite}}
+                    =\mathrm{Top}_k\bigl(\mathcal{T}_{\mathrm{safe}},\,J_{\mathrm{local}}^R\bigr)\).
                 \end{enumerate}
 
                 \vspace{0.2em}
                 Стратегия (обучение в модели мира):
                 \[
-                    \mathcal{L}(\theta)
-                    =-\sum_{t=1}^{T}\mathrm{sg}\bigl(R^{\lambda}(s_t)\bigr)
-                    +\eta\,\mathrm{H}\bigl[\pi_\theta(a_t\mid s_t)\bigr]
-                    -\Psi\bigl(\mathrm{sg}(C^{\lambda}(s_t)),\lambda_p,\mu\bigr).
+                    \mathcal{L}(\pi,\lambda)
+                    =J_R(\pi)-\lambda\bigl(J_C(\pi)-d\bigr).
                 \]
             \end{block}
         \end{column}
@@ -347,18 +358,20 @@
         \end{column}
         \begin{column}{0.46\textwidth}
             \begin{block}{Неявная модель мира}
+                \scriptsize
                 Неявная модель мира в SPOWL обучается полезным представлениям
                 с точки зрения CMDP-задачи и помогает решать проблему
                 смещённой цели (\textit{miss objective}).
             \end{block}
 
-            \begin{alertblock}{Оценка будущих накопленных штрафов}
+            \begin{block}{Оценка будущих накопленных штрафов}
+                \scriptsize
                 \[
                     \hat Q^c_{t,j}=\hat Q^c_j(z_t,a_t)
                 \]
-            \end{alertblock}
+            \end{block}
 
-            \scriptsize
+            \tiny
             \(\hat Q^c_j\) задаёт оценку ожидаемого будущего накопленного штрафа.
         \end{column}
     \end{columns}
@@ -371,29 +384,30 @@
             \includegraphics[width=\linewidth]{plan}
         \end{column}
         \begin{column}{0.51\textwidth}
-            \begin{block}{Оценка кандидатной траектории}
-                \[
-                    \tau=(z_t,a_t,\ldots,z_{t+H},a_{t+H}),
-                    \qquad
-                    z_{t+1}=f(z_t,a_t)
-                \]
-                \[
-                    a_t\sim\mathcal{N}(\mu_a,\sigma_a)
-                    \quad \text{или} \quad
-                    a_t\sim\pi(z_t).
-                \]
+            \begin{block}{Планирование (CEM)}
+                \begin{enumerate}
+                    \setlength{\itemsep}{0pt}
+                    \item \(a_t \sim \mathcal{N}^{t}(\mu_a^{t}, \sigma_a^{t})\),
+                    \(t = 0, \ldots, H-1\);\\
+                    \(\tau=(z_t,a_t,\ldots,z_{t+H},a_{t+H}),\;
+                    z_{t+1}=f(z_t,a_t)\).
+                    \item \(\mathcal{T}_{\mathrm{safe}}
+                    =\bigl\{i:J^{c}_M(\tau^{(i)})\leq d\bigr\}\);
+                    \item \(\mathcal{T}_{\mathrm{elite}}
+                    =\mathrm{Top}_k\bigl(\mathcal{T}_{\mathrm{safe}},\,J^{R}_M\bigr)\).
+                \end{enumerate}
             \end{block}
 
             \vspace{-0.3em}
             \[
-                J_M=
+                J^{R}_M=
                 \sum_{i=0}^{H-1}\gamma^i\hat r_{t+i}
                 +\gamma^H\hat Q_{\mathrm{avg}}(z_{t+H},a_{t+H})
             \]
             \[
-                J_M^c=
-                \sum_{i=0}^{H-1}\gamma_c^i\hat c_{\max,t+i}
-                +\fcolorbox{red}{white}{\(\gamma_c^H
+                J^{c}_M=
+                \sum_{i=0}^{H-1}\gamma^i\hat c_{t+i}
+                +\fcolorbox{red}{white}{\(\gamma^H
                 \hat Q_{c,\mathrm{avg}}(z_{t+H},a_{t+H})\)}
             \]
             \vspace{-0.5em}
@@ -468,6 +482,10 @@
 
                 \vspace{0.6em}
                 \(\rho\downarrow\) --- средний штраф за шаг \((\times 10^4)\).
+
+                \vspace{0.6em}
+                ET$\downarrow$ --- время генерации одного действия
+                при инференсе: $4.0\cdot 10^{-2}$~с.
             \end{block}
 
             \vfill
@@ -486,17 +504,20 @@
 \begin{frame}[shrink=8]{Проблема безопасного исследования в задачах с большим горизонтом}
     \begin{columns}[T,onlytextwidth]
         \begin{column}{0.43\textwidth}
-            \begin{alertblock}{Признаки большого горизонта}
-                В задачах с большим горизонтом агенту требуется найти
-                длинную безопасную последовательность действий до получения
-                полезного сигнала.
-            \end{alertblock}
+            \small
+            Добавление безопасности к RL-стратегии $\rightarrow$
+            исследование ухудшается $\rightarrow$
+            переход на задачи с большим горизонтом $\rightarrow$
+            робот стоит на месте.
 
+            \vspace{0.35em}
+            \begin{alertblock}{Признаки большого горизонта}
             \begin{itemize}
                 \item большая последовательность шагов до цели;
                 \item разреженное вознаграждение;
                 \item большое пространство состояний и действий.
             \end{itemize}
+            \end{alertblock}
         \end{column}
 
         \begin{column}{0.55\textwidth}
@@ -511,7 +532,7 @@
             {\tiny
             \setlength{\tabcolsep}{0.5pt}
             \renewcommand{\arraystretch}{0.72}
-            \resizebox{0.74\linewidth}{!}{%
+            \resizebox{0.68\linewidth}{!}{%
             \begin{tabular}{lcc}
                 \toprule
                 Method & Final SR$\uparrow$ & Final Cost$\downarrow$ \\
@@ -519,7 +540,6 @@
                 SafeDreamer & \(0\) & \(13 \pm 18.11\) \\
                 CUP & \(0\) & \(6.8 \pm 22.4\) \\
                 FOCOPS & \(0\) & \(19.4 \pm 50.9\) \\
-                TD3L/R & \(0.38 \pm 0.04\) & \(83.6 \pm 37.2\) \\
                 PPOLAG & \(0.2 \pm 0.2\) & \(41.2 \pm 1.1\) \\
                 TD3LAG & \(0.13 \pm 0.33\) & \(133.45 \pm 184.4\) \\
                 \bottomrule
@@ -533,7 +553,7 @@
             {\tiny
             \setlength{\tabcolsep}{0.5pt}
             \renewcommand{\arraystretch}{0.72}
-            \resizebox{0.74\linewidth}{!}{%
+            \resizebox{0.68\linewidth}{!}{%
             \begin{tabular}{lcc}
                 \toprule
                 Method & Final SR$\uparrow$ & Final Cost$\downarrow$ \\
@@ -552,7 +572,7 @@
 
 \section{Безопасное исследование: SG-Safe}
 
-\begin{frame}{SG-Safe: направленное исследование через подцели}
+\begin{frame}{SG-Safe: Решение проблемы безопасного исследования в задачах с большим горизонтом через подцели}
     \centering
     \includegraphics[width=0.72\linewidth]{method_scheme_3}
 
@@ -567,9 +587,7 @@
     \scriptsize
     \begin{columns}[T,onlytextwidth]
         \begin{column}{0.49\textwidth}
-            \textbf{Стратегия генерации подцелей (SAC) базируется на подходе
-            RIS\footnotemark[1].}
-
+            \begin{block}{Стратегия генерации подцелей (SAC) базируется на подходе RIS\footnotemark[1].}
             \(V^{\pi_\theta}(s,g)\) --- ожидаемое дисконтированное
             вознаграждение при достижении цели \(g\) из состояния \(s\):
             \[
@@ -609,9 +627,10 @@
 
             \vfill
             \(p_s(\cdot)\) --- распределение состояний в среде.
+            \end{block}
         \end{column}
         \begin{column}{0.49\textwidth}
-            \textbf{Безопасная стратегия (SAC-LAG + HER)}
+            \begin{block}{Безопасная стратегия (SAC-LAG + HER)}
             \[
                 \begin{aligned}
                 J(\pi_\theta)=\mathbb{E}\big[&
@@ -655,6 +674,7 @@
                     \,\middle|\,s_0=s,a_0=a,g
                 \right].
             \]
+            \end{block}
         \end{column}
     \end{columns}
 
@@ -666,7 +686,7 @@
     \centering
     \scriptsize
     SR~--- доля успешных эпизодов, CR~--- частота столкновений,
-    MTSC~--- средний накопленный штраф за эпизод.
+    Cost~--- средний накопленный штраф за эпизод.
     Красным выделены методы с привилегированной информацией и/или
     явными моделями. Среднее~$\pm$~стандартное отклонение.
 
@@ -683,7 +703,7 @@
             \resizebox{\linewidth}{!}{%
             \begin{tabular}{lccc}
             \toprule
-            Method & SR$\uparrow$ & CR$\downarrow$ & MTSC$\downarrow$ \\
+            Method & SR$\uparrow$ & CR$\downarrow$ & Cost$\downarrow$ \\
             \midrule
             SG-Safe & $\mathbf{0.919\pm0.009}$ & $\mathbf{0.025\pm0.012}$ &
             $1.567\pm0.331$ \\
@@ -708,7 +728,7 @@
             \resizebox{\linewidth}{!}{%
             \begin{tabular}{lccc}
             \toprule
-            Method & SR$\uparrow$ & CR$\downarrow$ & MTSC$\downarrow$ \\
+            Method & SR$\uparrow$ & CR$\downarrow$ & Cost$\downarrow$ \\
             \midrule
             SG-Safe & $\mathbf{0.875\pm0.052}$ & $\mathbf{0.031\pm0.017}$ &
             $5.103\pm2.632$ \\
@@ -738,7 +758,7 @@
             \resizebox{\linewidth}{!}{%
             \begin{tabular}{lccc}
             \toprule
-            Method & SR$\uparrow$ & CR$\downarrow$ & MTSC$\downarrow$ \\
+            Method & SR$\uparrow$ & CR$\downarrow$ & Cost$\downarrow$ \\
             \midrule
             SG-Safe & $\mathbf{0.897\pm0.026}$ & $0.028\pm0.010$ & $3.335\pm1.327$ \\
             SAC-LAG & $0.364\pm0.006$ & $\mathbf{0.017\pm0.005}$ & $4.042\pm1.530$ \\
@@ -760,7 +780,11 @@
             \scriptsize навигационная задача с большим горизонтом
             \vspace{0.2em}
 
-            \includegraphics[width=\linewidth]{dataset_tasks_2}
+            \animategraphics[
+                autoplay,
+                loop,
+                width=\linewidth
+            ]{8}{Presentation/images/sgsafe_polamp_frames/frame_}{001}{060}
         \end{column}
     \end{columns}
 \end{frame}
@@ -773,18 +797,20 @@
         В SG-Safe подцели направляют исследование, однако их безопасность явно
         не гарантируется. ITES решает более сильную задачу и контролирует
         безопасность всей иерархии: как при выборе промежуточных подцелей, так
-        и при их достижении. Декомпозиция позволяет применять модель мира на
-        коротком горизонте в задачах с длинной последовательностью действий.
+        и при их достижении.
     \end{block}
     \vspace{-0.2em}
     \begin{columns}[T,onlytextwidth]
         \begin{column}{0.44\textwidth}
             \begin{block}{Иерархия}
+                \footnotesize
+                \setlength{\abovedisplayskip}{3pt}
+                \setlength{\belowdisplayskip}{3pt}
                 \begin{itemize}
                     \item \(\pi^h_{\theta_h}(s_g\mid s,g)\) генерирует подцель;
                     \item \(\pi^l_{\theta_l}(a\mid s,s_g)\) достигает подцель.
                 \end{itemize}
-                {\small Верхнеуровневый критик вознаграждения}
+                Верхнеуровневый критик вознаграждения
                 \[
                 Q^h_{\theta_{qh}}(s,s_g,g)=
                 \mathbb{E}\!\left[
@@ -792,8 +818,7 @@
                 \,\middle|\,s_0=s,\ s_{g,0}=s_g,\ g
                 \right].
                 \]
-                \vspace{0.2em}
-                {\small Обучает эмбеддинги целей}
+                Обучает эмбеддинги целей
                 \[
                 \begin{aligned}
                 L_{adj}=\mathbb{E}\big[&
@@ -805,12 +830,12 @@
             \end{block}
         \end{column}
         \begin{column}{0.53\textwidth}
-            \begin{alertblock}{Функция потерь HRAC}
+            \begin{block}{Функция потерь HRAC}
                 \[
                 L^h=-Q^h_{\theta_{qh}}(s,s_g,g)
                 +\beta^h_{adj}L_{adj}(s,s_g).
                 \]
-            \end{alertblock}
+            \end{block}
             \small
             \(Q^h\) способствует максимизации вознаграждения от подцели для
             решения задачи.\\
@@ -823,6 +848,13 @@
 \begin{frame}[shrink=8]{Безопасность на верхнем уровне: генерация безопасных подцелей}
     \begin{columns}[T,onlytextwidth]
         \begin{column}{0.47\textwidth}
+            \begin{block}{Задача}
+                \small
+                обеспечить безопасность
+                \(s_g \sim \pi^h_{\theta_h}(s_g \mid s,g)\).
+            \end{block}
+
+            \vspace{0.15em}
             \begin{block}{Два сигнала безопасности}
                 \small
                 Модель штрафов возвращает вероятность того, что подцель
@@ -843,7 +875,7 @@
             \end{block}
         \end{column}
         \begin{column}{0.50\textwidth}
-            \begin{alertblock}{Функция потерь ITES на верхнем уровне}
+            \begin{block}{Функция потерь ITES на верхнем уровне}
                 \small
                 \[
                 \begin{aligned}
@@ -856,10 +888,12 @@
                 \]
                 \centering
                 \scriptsize\textcolor{red}{Компоненты, отвечающие за безопасность}
-            \end{alertblock}
+            \end{block}
             \small
-            \(C_M\) направляет подцель в безопасную область, а \(Q^h_c\)
-            учитывает долгосрочные последствия её выбора.
+            \begin{itemize}
+                \item \(C_M\) направляет подцель в безопасную область;
+                \item \(Q^h_c\) учитывает безопасность достижения подцелей.
+            \end{itemize}
         \end{column}
     \end{columns}
 \end{frame}
@@ -868,116 +902,151 @@
     \begin{columns}[T,onlytextwidth]
         \begin{column}{0.49\textwidth}
             \begin{alertblock}{Проблема}
-                Даже безопасная подцель не гарантирует безопасную траекторию:
-                агент может нарушить ограничения в процессе её достижения.
+                \footnotesize
+                Безопасная подцель не гарантирует безопасное достижение
+                подцели.
             \end{alertblock}
-            \begin{block}{Проверка в модели мира}
+
+            \vspace{0.15em}
+            \begin{block}{Задача}
                 \small
+                обеспечить безопасность
+                \(a_i \sim \pi^l_{\theta_l}(a_i \mid s_i,s_g)\) для всех
+                \(i\) до подцели.
+            \end{block}
+
+            \vspace{0.15em}
+            \footnotesize
+            \(M_{\theta_m}\)~--- модель мира (имеет маленький размер).
+
+            \vspace{0.15em}
+            \begin{block}{Проверка в модели мира}
+                \scriptsize
                 \begin{enumerate}
                     \item стратегия выбирает действие
-                    \(a\sim\pi^l_{\theta_l}(a\mid s,s_g)\);
+                    \(a_i\sim\pi^l_{\theta_l}(a_i\mid s_i,s_g)\);
                     \item модель мира предсказывает
-                    \(s'=M_{\theta_m}(s,a)\);
-                    \item процедура повторяется для случайного горизонта
-                    \(n\sim U(\{1,\ldots,k-1\})\).
+                    \(s'_{i+1}=M_{\theta_m}(s_i,a_i)\);
+                    \item \(L_{\text{imagined}} =
+                    \sum\limits_{i=1}^{n} C_M(\phi(s_i), s)\).
                 \end{enumerate}
             \end{block}
         \end{column}
         \begin{column}{0.48\textwidth}
-            \begin{alertblock}{Функция потерь ITES на нижнем уровне}
+            \begin{block}{Функция потерь ITES на нижнем уровне}
                 \small
                 \[
                 \begin{aligned}
                 L^l={}&-Q^l_{\theta_{ql}}(s,a,s_g)\\
                 &+\fcolorbox{red}{white}{\(\displaystyle
-                -\beta^l_{safe}C_M(\phi(s_n),s)\)}.
+                -\beta^l_{safe}L_{\text{imagined}}\)}.
                 \end{aligned}
                 \]
                 \centering
                 \scriptsize\textcolor{red}{Компонент, отвечающий за безопасность}
-            \end{alertblock}
-            \small
-            \(C_M\) оценивает безопасность траектории в модели мира.
+            \end{block}
         \end{column}
     \end{columns}
 \end{frame}
 
 \begin{frame}[shrink=8]{Задачи навигации и манипуляции с большим горизонтом}
-    \centering
     \scriptsize
-    Итоговые результаты на SafeAntMaze и SafePusher.
-    SAM-C~--- SafeAntMaze C-shape, SAM-W~--- SafeAntMaze W-shape,
-    SR~--- доля успешных эпизодов.
-    Методы с Final Cost~$\leqslant d$ выделены зелёным, нарушающие~---
-    красным. Усреднение по 5 запускам.
-
-    \vspace{0.2em}
-    \tiny
-    \setlength{\tabcolsep}{1pt}
-    \renewcommand{\arraystretch}{0.75}
     \begin{columns}[T,onlytextwidth]
-        \begin{column}{0.49\textwidth}
+        \begin{column}{0.60\textwidth}
             \centering
-            \textbf{SAM-C}
+            Итоговые результаты на SafeAntMaze и SafePusher.
+            SAM-C~--- SafeAntMaze C-shape, SAM-W~--- SafeAntMaze W-shape,
+            SR~--- доля успешных эпизодов.
+            Методы с Cost~$\leqslant d$ выделены зелёным, нарушающие~---
+            красным. Усреднение по 5 запускам.
+
+            \vspace{0.15em}
+            \tiny
+            \setlength{\tabcolsep}{1pt}
+            \renewcommand{\arraystretch}{0.75}
+            \begin{columns}[T,onlytextwidth]
+                \begin{column}{0.49\textwidth}
+                    \centering
+                    \textbf{SAM-C}
+                    \vspace{0.1em}
+
+                    \resizebox{\linewidth}{!}{%
+                    \begin{tabular}{lcc}
+                    \toprule
+                    Method & SR$\uparrow$ & Cost$\downarrow$ \\
+                    \midrule
+                    \rowcolor{green!10} ITES & $\mathbf{0.88 \pm 0.01}$ & $15.2 \pm 17.3$ \\
+                    \rowcolor{green!10} SafeDreamer & $0$ & $13 \pm 18.11$ \\
+                    \rowcolor{green!10} CUP & $0$ & $\mathbf{6.8 \pm 22.4}$ \\
+                    \rowcolor{green!10} FOCOPS & $0$ & $19.4 \pm 50.9$ \\
+                    \rowcolor{red!10} TD3L/R & $0.38 \pm 0.04$ & $83.6 \pm 37.2$ \\
+                    \rowcolor{red!10} PPOLAG & $0.2 \pm 0.2$ & $41.2 \pm 1.1$ \\
+                    \rowcolor{red!10} TD3LAG & $0.13 \pm 0.33$ & $133.45 \pm 184.4$ \\
+                    \bottomrule
+                    \end{tabular}%
+                    }
+                \end{column}
+                \begin{column}{0.49\textwidth}
+                    \centering
+                    \textbf{SAM-W}
+                    \vspace{0.1em}
+
+                    \resizebox{\linewidth}{!}{%
+                    \begin{tabular}{lcc}
+                    \toprule
+                    Method & SR$\uparrow$ & Cost$\downarrow$ \\
+                    \midrule
+                    \rowcolor{green!10} ITES & $\mathbf{0.35 \pm 0.05}$ & $183 \pm 16.5$ \\
+                    \rowcolor{green!10} TD3L/R & $0.05 \pm 0.02$ & $154 \pm 13.5$ \\
+                    \rowcolor{green!10} CUP & $0$ & $\mathbf{103.5 \pm 21.5}$ \\
+                    \rowcolor{green!10} FOCOPS & $0$ & $141.0 \pm 26.0$ \\
+                    \rowcolor{green!10} TD3LAG & $0$ & $128.68 \pm 210$ \\
+                    \rowcolor{green!10} PPOLAG & $0$ & $105 \pm 20.1$ \\
+                    \rowcolor{red!10} SafeDreamer & $0$ & $216.3 \pm 199$ \\
+                    \bottomrule
+                    \end{tabular}%
+                    }
+                \end{column}
+            \end{columns}
+
+            \vspace{0.15em}
+            {\tiny
+            \textbf{Pusher}
             \vspace{0.1em}
 
-            \resizebox{0.82\linewidth}{!}{%
+            \resizebox{0.49\linewidth}{!}{%
             \begin{tabular}{lcc}
             \toprule
-            Method & Final SR$\uparrow$ & Final Cost$\downarrow$ \\
+            Method & SR$\uparrow$ & Cost$\downarrow$ \\
             \midrule
-            \rowcolor{green!10} ITES & $\mathbf{0.88 \pm 0.01}$ & $15.2 \pm 17.3$ \\
-            \rowcolor{green!10} SafeDreamer & $0$ & $13 \pm 18.11$ \\
-            \rowcolor{green!10} CUP & $0$ & $\mathbf{6.8 \pm 22.4}$ \\
-            \rowcolor{green!10} FOCOPS & $0$ & $19.4 \pm 50.9$ \\
-            \rowcolor{red!10} TD3L/R & $0.38 \pm 0.04$ & $83.6 \pm 37.2$ \\
-            \rowcolor{red!10} PPOLAG & $0.2 \pm 0.2$ & $41.2 \pm 1.1$ \\
-            \rowcolor{red!10} TD3LAG & $0.13 \pm 0.33$ & $133.45 \pm 184.4$ \\
+            \rowcolor{green!10} ITES & $\mathbf{0.42 \pm 0.02}$ & $\mathbf{12.8 \pm 0.87}$ \\
+            \rowcolor{green!10} SafeDreamer & $0$ & $6.7 \pm 2.7$ \\
+            \rowcolor{red!10} TD3LAG & $0.05 \pm 0.03$ & $54.72 \pm 3.16$ \\
+            \rowcolor{red!10} CUP & $0.01$ & $46.14 \pm 0.42$ \\
+            \rowcolor{red!10} FOCOPS & $0$ & $55.83 \pm 1.67$ \\
+            \rowcolor{red!10} PPOLAG & $0$ & $51.25 \pm 1.25$ \\
             \bottomrule
             \end{tabular}%
-            }
+            }}
         \end{column}
-        \begin{column}{0.49\textwidth}
+        \begin{column}{0.38\textwidth}
             \centering
-            \textbf{SAM-W}
-            \vspace{0.1em}
-
-            \resizebox{0.82\linewidth}{!}{%
-            \begin{tabular}{lcc}
-            \toprule
-            Method & Final SR$\uparrow$ & Final Cost$\downarrow$ \\
-            \midrule
-            \rowcolor{green!10} ITES & $\mathbf{0.35 \pm 0.05}$ & $183 \pm 16.5$ \\
-            \rowcolor{green!10} TD3L/R & $0.05 \pm 0.02$ & $154 \pm 13.5$ \\
-            \rowcolor{green!10} CUP & $0$ & $\mathbf{103.5 \pm 21.5}$ \\
-            \rowcolor{green!10} FOCOPS & $0$ & $141.0 \pm 26.0$ \\
-            \rowcolor{green!10} TD3LAG & $0$ & $128.68 \pm 210$ \\
-            \rowcolor{green!10} PPOLAG & $0$ & $105 \pm 20.1$ \\
-            \rowcolor{red!10} SafeDreamer & $0$ & $216.3 \pm 199$ \\
-            \bottomrule
-            \end{tabular}%
+            \vspace{0.15em}
+            \parbox{\linewidth}{\centering
+                {\tiny\textbf{SafeAntMaze}}\\[0.2em]
+                \animategraphics[
+                    autoplay,
+                    loop,
+                    width=0.95\linewidth
+                ]{8}{Presentation/images/ites_safe_ant_maze_frames/frame_}{000}{048}
+            }
+            \vspace{0.55em}
+            \parbox{\linewidth}{\centering
+                {\tiny\textbf{SafePusher}}\\[0.2em]
+                \includegraphics[width=0.95\linewidth]{safe_pusher}
             }
         \end{column}
     \end{columns}
-
-    \vspace{0.25em}
-    \textbf{Pusher}
-    \vspace{0.1em}
-
-    \resizebox{0.42\linewidth}{!}{%
-    \begin{tabular}{lcc}
-    \toprule
-    Method & Final SR$\uparrow$ & Final Cost$\downarrow$ \\
-    \midrule
-    \rowcolor{green!10} ITES & $\mathbf{0.42 \pm 0.02}$ & $\mathbf{12.8 \pm 0.87}$ \\
-    \rowcolor{green!10} SafeDreamer & $0$ & $6.7 \pm 2.7$ \\
-    \rowcolor{red!10} TD3LAG & $0.05 \pm 0.03$ & $54.72 \pm 3.16$ \\
-    \rowcolor{red!10} CUP & $0.01$ & $46.14 \pm 0.42$ \\
-    \rowcolor{red!10} FOCOPS & $0$ & $55.83 \pm 1.67$ \\
-    \rowcolor{red!10} PPOLAG & $0$ & $51.25 \pm 1.25$ \\
-    \bottomrule
-    \end{tabular}%
-    }
 \end{frame}
 
 \begin{frame}{ITES: абляция компонентов безопасности}
@@ -985,42 +1054,14 @@
     \includegraphics[width=0.72\linewidth]{Ablation_SafeAntMazeCshape_3}
 
     \vspace{0.3em}
-    \parbox{0.96\linewidth}{\scriptsize
-    Анализ безопасности на нижнем и верхнем уровнях: ITES w/o LLS~---
-    без безопасности на нижнем уровне; ITES w/o HLS~---
-    без безопасности на верхнем уровне (SafeAntMazeCshape).
-    Усреднение по 5 запускам.}
+    \begin{block}{Влияние безопасных подцелей на обучение}
+        \small
+        Отсутствие безопасности в подцелях приводит к такому же Success Rate, но
+        гораздо большим нарушениям Cost (зелёный график).
+    \end{block}
 \end{frame}
 
 \section{Текстовые ограничения: Caged CrafText}
-
-\begin{frame}{Мультимодальная безопасность с языковыми целями и ограничениями}
-    \begin{columns}[T,onlytextwidth]
-        \begin{column}{0.52\textwidth}
-            \begin{block}{Переход к естественному языку}
-                \small
-                В предыдущих главах цель и ограничения задавались формально:
-                координатой цели или численной функцией штрафов.
-            \end{block}
-            \small
-            В реальных сценариях пользователь формулирует на естественном языке
-            не только цель, но и ограничения: каких объектов избегать, какие
-            ресурсы сохранять и какие действия допустимы только при выполнении
-            условий.
-
-            \vspace{0.4em}
-            Поэтому агент должен одновременно понимать текст, соотносить его
-            с наблюдениями среды и принимать безопасные решения.
-        \end{column}
-        \begin{column}{0.45\textwidth}
-            \centering
-            \includegraphics[width=\linewidth]{visual_abstract_3}
-            \vspace{0.2em}
-
-            \scriptsize Caged CrafText: цели и ограничения задаются естественным языком.
-        \end{column}
-    \end{columns}
-\end{frame}
 
 \newcommand{\cemj}[1]{\raisebox{-0.18ex}{\includegraphics[height=1.15em]{emoji/#1}}}
 
@@ -1121,9 +1162,6 @@
                 \hline
             \end{tabular}}
 
-            \vspace{0.35em}
-            \scriptsize
-            Результаты усреднены по 5 случайным сидам.
             \vfill
         \end{column}
 
@@ -1133,12 +1171,6 @@
 
             \scriptsize
             Ограничение: Don't attack w/o \(\cemj{wood_sword.png}\).
-
-            \vspace{0.15em}
-            \includegraphics[width=0.88\linewidth,keepaspectratio]{Ablation_math_eat_cow}
-
-            \scriptsize
-            Ограничение: \(20\) budget, \(-10\) for killing \(\cemj{cow.png}\).
 
             \vspace{0.2em}
             \scriptsize
@@ -1153,13 +1185,12 @@
 
 \begin{frame}{Практическая значимость}
     \begin{itemize}
-        \item Компоненты SPOWL для оценки будущих накопленных штрафов
-              применимы в робототехнических задачах безопасного исследования:
-              агент заранее оценивает риск кандидатных действий до их выполнения
-              в реальной среде.
-        \item SG-Safe и ITES применимы к адаптации мобильных роботов в задачах
-              автономной инспекции, патрулирования, обследования аварийных зон,
-              навигации в шахтах и других труднодоступных пространствах.
+        \item Метод SPEIS можно применять в робототехнических задачах с коротким
+              горизонтом, например в задачах навигации в офисных помещениях.
+        \item Методы SG-Safe и ITES могут быть применимы в задачах с большим
+              горизонтом, в узких пространствах, например навигации в шахтах;
+              ITES может быть применим для задач манипуляции роборукой,
+              например на конвейерных лентах.
         \item Репозитории с открытым кодом:
               SPOWL\textsuperscript{1},
               SG-Safe\textsuperscript{2},
