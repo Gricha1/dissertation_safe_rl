@@ -40,16 +40,23 @@
 \newcommand{\thesisOrganizationShort}  % Диссертация, краткое название организации для доклада
 {МФТИ}
 
-\newcommand{\thesisInOrganization}     % Диссертация, организация в предложном падеже: Работа выполнена в ...
+\newcommand{\thesisInOrganization}     % Автореферат, оборот: Работа выполнена в ...
 {федеральном государственном автономном образовательном учреждении высшего
 образования <<Московский физико-технический институт (национальный
-исследовательский университет)>> (МФТИ, Физтех)}
+исследовательский университет)>>}
 
 %% \newcommand{\supervisorDead}{}           % Рисовать рамку вокруг фамилии
 \newcommand{\supervisorFio}              % Научный руководитель, ФИО
 {Панов Александр Игоревич}
 \newcommand{\supervisorRegalia}          % Научный руководитель, регалии
 {доктор физико-математических наук, профессор РАН}
+\newcommand{\supervisorLastName}{Панов}
+\newcommand{\supervisorFirstName}{Александр}
+\newcommand{\supervisorPatronymic}{Игоревич}
+\newcommand{\supervisorFioTitleSpread}{%
+  \supervisorLastName\hspace{3em}\supervisorFirstName\hspace{3em}\supervisorPatronymic}
+\newcommand{\supervisorRegaliaTitleFirst}{доктор}
+\newcommand{\supervisorRegaliaTitleRest}{физико-математических наук, профессор РАН}
 \newcommand{\supervisorFioShort}         % Научный руководитель, ФИО
 {Александр~Игоревич~Панов}
 \newcommand{\supervisorRegaliaShort}     % Научный руководитель, регалии
@@ -92,8 +99,8 @@
 %% \newcommand{\opponentThreeJobPost}     % Оппонент 3, должность
 %% {\fixme{старший научный сотрудник}}
 
-\newcommand{\leadingOrganizationTitle}{% Ведущая организация
-Московский физико-технический институт (национальный исследовательский университет), МФТИ, Физтех}
+\newcommand{\leadingOrganizationTitle}{% Ведущая организация (шаблон)
+наименование организации}
 
 \newcommand{\defenseDate}              % Защита, дата
 {дата уточняется}
@@ -112,9 +119,13 @@
 {}            % Для сокращений есть ГОСТы, например: ГОСТ Р 7.0.12-2011 + http://base.garant.ru/179724/#block_30000
 
 \newcommand{\synopsisLibrary}          % Автореферат, название библиотеки
-{МФТИ и на сайте\footnote{\url{https://mipt.ru}}}
+{МФТИ, Физтех и на сайте организации https://mipt.ru}
 \newcommand{\synopsisDate}             % Автореферат, дата рассылки
 {дата уточняется}
+\newcommand{\defenseCouncilOrganizationBase}{% Совет, созданный на базе ...
+федерального государственного автономного образовательного учреждения высшего
+образования <<Московский физико-технический институт (национальный
+исследовательский университет)>> (МФТИ, Физтех)}
 
 % To avoid conflict with beamer class use \providecommand
 \providecommand{\keywords}%            % Ключевые слова для метаданных PDF диссертации и автореферата

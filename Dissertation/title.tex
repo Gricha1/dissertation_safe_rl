@@ -1,80 +1,77 @@
-% Титульный лист (ГОСТ Р 7.0.11-2001, 5.1)
+% Титульный лист — dissertatsiya_tit.shablon.docx (A4)
 \thispagestyle{empty}
+
+\newcommand{\titvspace}[1]{\vspace{#1pt}}
+\newcommand{\titblankn}[2]{%
+  \ifnum#1>0 \titvspace{#2}\expandafter\titblankn\expandafter{\number\numexpr#1-1\relax}{#2}\fi
+}
+
+\newcommand{\titbold}[1]{{\fontsize{14}{14}\bfseries\selectfont #1}}
+\newcommand{\titboldit}[1]{{\fontsize{14}{14}\bfseries\itshape\selectfont #1}}
+\newcommand{\titboldlg}[1]{{\fontsize{16}{16}\bfseries\selectfont #1}}
+\newcommand{\titnorm}[1]{{\fontsize{14}{14}\mdseries\selectfont #1}}
+\newlength{\titsupervisorindent}
+\setlength{\titsupervisorindent}{87.5mm}  % docx P22–P23: left 4962 twips
+
 \begin{center}
-\thesisOrganization
+\titbold{%
+ФЕДЕРАЛЬНОЕ ГОСУДАРСТВЕННОЕ АВТОНОМНОЕ\\
+ОБРАЗОВАТЕЛЬНОЕ УЧРЕЖДЕНИЕ ВЫСШЕГО ОБРАЗОВАНИЯ\\[14pt]
+<<Московский физико-технический институт\\
+(национальный исследовательский университет)>>\\
+(МФТИ, Физтех)%
+}
 \end{center}
 %
-\vspace{0pt plus4fill} %число перед fill = кратность относительно некоторого расстояния fill, кусками которого заполнены пустые места
+\titblankn{1}{12}
 \begin{flushright}
-На правах рукописи
-
-%\textsl {УДК \thesisUdk}
+\titboldit{На правах рукописи}
 \end{flushright}
 %
-\vspace{0pt plus6fill} %число перед fill = кратность относительно некоторого расстояния fill, кусками которого заполнены пустые места
+\titblankn{2}{12}
 \begin{center}
-{\large \thesisAuthor}
+\titboldlg{\thesisAuthor}
 \end{center}
 %
-\vspace{0pt plus1fill} %число перед fill = кратность относительно некоторого расстояния fill, кусками которого заполнены пустые места
+\titblankn{1}{12}
 \begin{center}
-\textbf {\large %\MakeUppercase
-\thesisTitle}
-
-\vspace{0pt plus2fill} %число перед fill = кратность относительно некоторого расстояния fill, кусками которого заполнены пустые места
-{%\small
-Специальность \thesisSpecialtyNumber\ "---
-
-<<\thesisSpecialtyTitle>>
-}
+\titboldlg{\thesisTitle}
+\end{center}
+%
+\titblankn{1}{12}
+\begin{center}
+\titboldlg{Специальность: \thesisSpecialtyNumber.\ \thesisSpecialtyTitle}
 
 \ifdefined\thesisSpecialtyTwoNumber
-{%\small
-Специальность \thesisSpecialtyTwoNumber\ "---
-
-<<\thesisSpecialtyTwoTitle>>
-}
+\par\titboldlg{Специальность: \thesisSpecialtyTwoNumber.\ \thesisSpecialtyTwoTitle}
 \fi
-
-\vspace{0pt plus2fill} %число перед fill = кратность относительно некоторого расстояния fill, кусками которого заполнены пустые места
-Диссертация на соискание учёной степени
-
-\thesisDegree
 \end{center}
 %
-\vspace{0pt plus4fill} %число перед fill = кратность относительно некоторого расстояния fill, кусками которого заполнены пустые места
-\begin{flushright}
-\ifdefined\supervisorTwoFio
-Научные руководители:
-
-\supervisorRegalia
-
-\ifdefined\supervisorDead
-\framebox{\supervisorFio}
-\else
-\supervisorFio
-\fi
-
-\supervisorTwoRegalia
-
-\ifdefined\supervisorTwoDead
-\framebox{\supervisorTwoFio}
-\else
-\supervisorTwoFio
-\fi
-\else
-Научный руководитель:
-
-\supervisorRegalia
-
-\ifdefined\supervisorDead
-\framebox{\supervisorFio}
-\else
-\supervisorFio
-\fi
-\fi
-
-\end{flushright}
+\titblankn{1}{12}
+\begin{center}
+\titboldlg{ДИССЕРТАЦИЯ\par
+на соискание ученой степени\par
+\thesisDegree}
+\end{center}
 %
-\vspace{0pt plus4fill} %число перед fill = кратность относительно некоторого расстояния fill, кусками которого заполнены пустые места
-{\centering\thesisCity\ "--- \thesisYear\par}
+\vspace{0pt plus1fill}
+\noindent\hspace{\titsupervisorindent}%
+\begin{minipage}[t]{\dimexpr\linewidth-\titsupervisorindent\relax}
+\titbold{Научный руководитель:}\par
+\titnorm{%
+\ifdefined\supervisorTwoFio
+\supervisorFio\ \textendash\ \supervisorRegaliaTitleFirst,\par
+\supervisorRegaliaTitleRest\par
+\supervisorTwoFio\ \textendash\ \supervisorTwoRegaliaTitleFirst,\par
+\supervisorTwoRegaliaTitleRest
+\else
+\supervisorFio\ \textendash\ \supervisorRegaliaTitleFirst,\par
+\supervisorRegaliaTitleRest
+\fi
+}
+\end{minipage}
+%
+\vspace{0pt plus1fill}
+\begin{center}
+\titbold{\thesisCity\ \textendash\ \thesisYear}
+\end{center}

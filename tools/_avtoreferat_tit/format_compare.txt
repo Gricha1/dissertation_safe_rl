@@ -1,0 +1,11 @@
+На правах | 12pt | bold=yes | align=default | indL=- twips
+Работа выполнена | 14pt | bold=no | align=default | indL=- twips
+Работа прошла | 14pt | bold=no | align=default | indL=- twips
+Научный руководитель | 14pt | bold=yes | align=default | indL=- twips
+Ведущая организация | 14pt | bold=yes | align=default | indL=- twips
+Защита состоится | 14pt | bold=yes | align=default | indL=- twips
+ознакомиться | 14pt | bold=no | align=default | indL=- twips
+Автореферат разослан | 14pt | bold=no | align=default | indL=- twips
+Ученый секретарь | 12pt | bold=yes | align=default | indL=- twips
+АВТОРЕФЕРАТ | 16pt | bold=yes | align=default | indL=- twips
+Долгопрудный | 14pt | bold=yes | align=default | indL=- twips

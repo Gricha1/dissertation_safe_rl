@@ -1,0 +1,1 @@
+﻿0" w:rsidRDefault="00000000" w:rsidRPr="00000000" w14:paraId="0000001F"><w:pPr><w:spacing w:line="360" w:lineRule="auto"/><w:rPr><w:sz w:val="40"/><w:szCs w:val="40"/><w:vertAlign w:val="superscript"/></w:rPr></w:pPr><w:r w:rsidDel="00000000" w:rsidR="00000000" w:rsidRPr="00000000"><w:rPr><w:rtl w:v

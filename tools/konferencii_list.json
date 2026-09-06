@@ -1,0 +1,23 @@
+{
+  "title": "Апробация",
+  "entries": [
+    {
+      "prefix": "Международная конференция «European Conference on Artificial Intelligence, ECAI 2025» (25–30 октября 2025 г., Болонья/Италия)",
+      "talk": "Safe Planning and Policy Optimization via World Model Learning"
+    },
+    {
+      "prefix": "Конференция «Fall into ML 2025» (24–25 октября 2025 г., Москва/Россия)",
+      "talk": "CrafText Benchmark: Advancing Instruction Following in Complex Multimodal Open-Ended World",
+      "poster": true
+    },
+    {
+      "prefix": "Междисциплинарная конференция по искусственному интеллекту «ИИ-АЗАМАН 2025» (17 сентября 2025 г., Казань/Россия)",
+      "talk": "CrafText Benchmark: Advancing Instruction Following in Complex Multimodal Open-Ended World",
+      "poster": true
+    },
+    {
+      "simple": true,
+      "text": "Семинары Центра когнитивного моделирования МФТИ (2023, 2024, 2025)."
+    }
+  ]
+}

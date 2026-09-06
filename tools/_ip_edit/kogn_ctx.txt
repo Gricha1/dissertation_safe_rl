@@ -1,0 +1,6 @@
+---
+w:rtl w:val="0"/></w:rPr><w:t xml:space="preserve">Научно-образовательный Центр когнитивного </w:t></w:r></w:p><w:p w:rsidR="00000000" w:rsidDel="00000000" w:rsidP="00000000" w:rsidRDefault="00000000"
+---
+/><w:rtl w:val="0"/></w:rPr><w:t xml:space="preserve">Участие в семинаре Центра когнитивного моделирования МФТИ</w:t></w:r></w:p></w:tc><w:tc><w:tcPr/><w:p w:rsidR="00000000" w:rsidDel="00000000" w:rs
+---
+r><w:rtl w:val="0"/></w:rPr><w:t xml:space="preserve">Участие в семинаре Центра когнитивного моделирования МФТИ </w:t></w:r></w:p></w:tc><w:tc><w:tcPr><w:tcBorders><w:right w:color="000000" w:space="0

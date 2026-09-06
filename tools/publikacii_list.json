@@ -1,0 +1,29 @@
+{
+  "title": "Список опубликованных работ по теме диссертации",
+  "journal_heading": "Публикации в журналах категории К1 собственного перечня журналов МФТИ:",
+  "entries": [
+    {
+      "text": "Gorbov G., Panov A. I. Enhancing Safe Exploration Through Subgoal Guidance // Technologies. -- 2026. -- Vol. 14, no. 3. -- Art. 146.",
+      "url": "https://www.mdpi.com/2227-7080/14/3/146"
+    },
+    {
+      "text": "Gorbov G., Lukashevsky D., Skrynnik A., Panov A. I. Caged CrafText: Language-Grounded Safety Constraints for Multimodal Reinforcement Learning in CrafText // Optical Memory and Neural Networks. -- 2026. -- Vol. 35. -- P. 18--30.",
+      "url": "https://link.springer.com/article/10.3103/S1060992X25602799"
+    }
+  ],
+  "conf_heading": "Публикации в сборниках трудов конференций уровня A и A*:",
+  "conf_entries": [
+    {
+      "text": "Latyshev A., Gorbov G., Panov A. I. Safe Planning and Policy Optimization via World Model Learning // Frontiers in Artificial Intelligence and Applications: Proceedings of the 28th European Conference on Artificial Intelligence (ECAI 2025). -- IOS Press, 2025. -- Vol. 413. -- P. 1945--1952."
+    },
+    {
+      "text": "Volovikova Z., Gorbov G., Kuderov P., Panov A., Skrynnik A. CrafText Benchmark: Advancing Instruction Following in Complex Multimodal Open-Ended World // Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers). -- 2025. -- P. 26131--26151."
+    }
+  ],
+  "other_heading": "Препринты:",
+  "other_entries": [
+    {
+      "text": "Gorbov G., Latyshev A., Panov A. I. Imagine To Ensure Safety in Hierarchical Reinforcement Learning // arXiv preprint arXiv:2606.22509, 2026."
+    }
+  ]
+}

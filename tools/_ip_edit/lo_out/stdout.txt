@@ -1,0 +1,1 @@
+convert C:\Grisha\mipt\asp\disser\dissertation\diplom_final\Documents\gorbov_individual_plan_2026.docx as a Writer document -> c:\Grisha\mipt\asp\disser\dissertation\diplom_final\tools\_ip_edit\lo_out\gorbov_individual_plan_2026.pdf using filter : writer_pdf_Export

@@ -1,85 +1,120 @@
+% Титульный лист автореферата — avtoreferat_tit.shablon (1).docx (A4)
 \thispagestyle{empty}
 
-\noindent\hfill\large{На правах рукописи}\par
+\newcommand{\synvspace}[1]{\vspace{#1pt}}
+\newcommand{\synblankn}[2]{%
+  \ifnum#1>0 \synvspace{#2}\expandafter\synblankn\expandafter{\number\numexpr#1-1\relax}{#2}\fi
+}
 
-\vspace{0pt plus1fill} %число перед fill = кратность относительно некоторого расстояния fill, кусками которого заполнены пустые места
+% docx sz (half-points): 24=12pt, 32=16pt, 28=14pt; bfseries ДО selectfont
+\newcommand{\synfrontrights}[1]{{\fontsize{12}{12}\bfseries\itshape\selectfont #1}}
+\newcommand{\synfrontmain}[1]{{\fontsize{16}{16}\bfseries\selectfont #1}}
+\newcommand{\synfrontcity}[1]{{\fontsize{14}{14}\bfseries\selectfont #1}}
+\newcommand{\synback}[1]{{\fontsize{14}{14}\mdseries\selectfont #1}}
+\newcommand{\synbackbold}[1]{{\fontsize{14}{14}\bfseries\selectfont #1}}
+\newcommand{\synsecbold}[1]{{\fontsize{12}{12}\bfseries\selectfont #1}}
+
+% docx indents (twips): 2832, 3544, 708
+\newlength{\synindentregalia}
+\newlength{\synindentleading}
+\newlength{\synindentfirst}
+\setlength{\synindentfirst}{12.5mm}  % docx firstLine 708 twips
+\setlength{\synindentregalia}{50mm}
+\setlength{\synindentleading}{62.5mm}
+\newlength{\synlabelwidth}
+\newlength{\syncontentstart}
+\settowidth{\synlabelwidth}{\synbackbold{Научный руководитель:}}
+\setlength{\syncontentstart}{\synindentleading}
+\ifdim\synlabelwidth>\syncontentstart
+  \setlength{\syncontentstart}{\synlabelwidth}
+\fi
+\addtolength{\syncontentstart}{1em}
+\newcommand{\synregaliatabbegin}{\begin{tabular}[t]{@{}>{\raggedright\arraybackslash}p{\syncontentstart}@{}>{\raggedright\arraybackslash}p{\dimexpr\linewidth-\syncontentstart\relax}@{}}}
+
+\begin{flushright}
+\synfrontrights{На правах рукописи}
+\end{flushright}
+%
+\synblankn{13}{12}
 \begin{center}
-\textbf {\large \thesisAuthor}
+\synfrontmain{\thesisAuthor}
 \end{center}
-
-\vspace{0pt plus3fill} %число перед fill = кратность относительно некоторого расстояния fill, кусками которого заполнены пустые места
+%
+\synblankn{2}{12}
 \begin{center}
-\textbf {\Large %\MakeUppercase
-\thesisTitle}
-
-\vspace{0pt plus3fill} %число перед fill = кратность относительно некоторого расстояния fill, кусками которого заполнены пустые места
-{\large Специальность: \thesisSpecialtyNumber. \thesisSpecialtyTitle}
+\synfrontmain{\thesisTitle}
+\end{center}
+%
+\synblankn{1}{12}
+\begin{center}
+\synfrontmain{Специальность: \thesisSpecialtyNumber.\ \thesisSpecialtyTitle}
 
 \ifdefined\thesisSpecialtyTwoNumber
-{\large Специальность \thesisSpecialtyTwoNumber\ "---\par <<\thesisSpecialtyTwoTitle>>}
+\par\synfrontmain{Специальность: \thesisSpecialtyTwoNumber.\ \thesisSpecialtyTwoTitle}
 \fi
-
-\vspace{0pt plus1.5fill} %число перед fill = кратность относительно некоторого расстояния fill, кусками которого заполнены пустые места
-\Large{Автореферат}\par
-\large{на соискание учёной степени\par \thesisDegree}
+\end{center}
+%
+\synblankn{3}{12}
+\begin{center}
+\synfrontmain{АВТОРЕФЕРАТ\par}
+\synblankn{2}{12}
+\synfrontmain{диссертации на соискание ученой степени\par}
+\synfrontmain{\thesisDegree}
+\end{center}
+%
+\vspace{0pt plus1fill}
+\begin{center}
+\synfrontcity{\thesisCity\ \textendash\ \thesisYear}
 \end{center}
 
-\vspace{0pt plus4fill} %число перед fill = кратность относительно некоторого расстояния fill, кусками которого заполнены пустые места
-{\centering\thesisCity~--- \thesisYear\par}
-
 \newpage
-% оборотная сторона обложки
+% оборотная сторона обложки (docx P48–P83)
 \thispagestyle{empty}
-\noindent Работа выполнена в {\thesisInOrganization}.
+\begingroup
+\frenchspacing
+\setlength{\parindent}{\synindentfirst}
+\setlength{\parskip}{0pt}
 
-\vspace{0.006\paperheight}
-\noindent%
-\begin{tabularx}{\textwidth}{@{}lX@{}}
-    \ifdefined\supervisorTwoFio
-    Научные руководители:   & \supervisorRegalia\par
-                              \ifdefined\supervisorDead
-                              \framebox{\textbf{\supervisorFio}}
-                              \else
-                              \textbf{\supervisorFio}
-                              \fi
-                              \par
-                              \vspace{0.008\paperheight}
-                              \supervisorRegaliaTwo\par
-                              \ifdefined\supervisorTwoDead
-                              \framebox{\textbf{\supervisorTwoFio}}
-                              \else
-                              \textbf{\supervisorTwoFio}
-                              \fi
-                              \vspace{0.008\paperheight}\\
-    \else
-    Научный руководитель:   & \supervisorRegalia\par
-                              \ifdefined\supervisorDead
-                              \framebox{\textbf{\supervisorFio}}
-                              \else
-                              \textbf{\supervisorFio}
-                              \fi
-                              \vspace{0.008\paperheight}\\
-    \fi
-    Ведущая организация:    &
-    \leadingOrganizationTitle
-    \\
-\end{tabularx}
-\vspace{0.006\paperheight}
+\indent\synback{Работа выполнена в \thesisInOrganization}
 
-\noindent Защита состоится \defenseDate~на~заседании диссертационного совета \defenseCouncilNumber~при \defenseCouncilTitle~по адресу: \defenseCouncilAddress.
+\synblankn{3}{14}
+\noindent
+\synregaliatabbegin
+\synbackbold{Научный руководитель:} &
+\synbackbold{\supervisorFio\ \textendash\ \supervisorRegaliaTitleFirst,} \\[0pt]
+\mbox{} &
+\synbackbold{\supervisorRegaliaTitleRest}
+\end{tabular}
 
-\vspace{0.004\paperheight}
-\noindent С диссертацией можно ознакомиться в библиотеке \synopsisLibrary.
+\synvspace{12}
+\synvspace{12}
+\synvspace{14}
+\noindent
+\synregaliatabbegin
+\synbackbold{Ведущая организация:} &
+\synback{\leadingOrganizationTitle}
+\end{tabular}
+
+\synvspace{12}
+\synvspace{14}
+\synvspace{14}
+\indent\synback{Защита состоится \synbackbold{число месяц год в 00 часов 00 минут} на заседании диссертационного совета \synbackbold{ШИФР СОВЕТА}, созданного на базе федерального государственного автономного образовательного учреждения высшего образования <<Московский физико-технический институт (национальный исследовательский университет)>> (МФТИ, Физтех)}
+
+\indent\synbackbold{по адресу:} \synback{\defenseCouncilAddress}
+
+\synblankn{2}{14}
+\indent\synback{С диссертацией можно ознакомиться в библиотеке \synopsisLibrary}
+
+\synblankn{2}{14}
+\indent\synback{Автореферат разослан <<\underline{\hspace{2em}}>> \underline{\hspace{6em}} \thesisYear~г.}
 
 \vspace{0pt plus1fill}
-\noindent%
-\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}b{0.38\textwidth}>{\raggedleft\arraybackslash}X@{}}
-    Ученый секретарь\par
-    диссертационного совета\par
-    \defenseCouncilNumber,\par
-    \defenseSecretaryRegalia
-    &
-    \defenseSecretaryFio
+\noindent
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.52\linewidth}>{\raggedleft\arraybackslash}X@{}}
+\synsecbold{Ученый секретарь} & \\
+\synsecbold{диссертационного совета} & \synsecbold{\defenseSecretaryFio}
 \end{tabularx}
+
+\endgroup
 
 \newpage
