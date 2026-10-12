@@ -13,6 +13,21 @@
 \newcommand{\synback}[1]{{\fontsize{14}{14}\mdseries\selectfont #1}}
 \newcommand{\synbackbold}[1]{{\fontsize{14}{14}\bfseries\selectfont #1}}
 \newcommand{\synsecbold}[1]{{\fontsize{12}{12}\bfseries\selectfont #1}}
+% как в avtoreferat_tit.shablon.docx: дата — bold + single underline у baseline
+\newcommand{\synbackboldul}[1]{%
+  \begingroup
+  \setbox0=\hbox{\fontsize{14}{14}\bfseries\selectfont #1}%
+  \leavevmode
+  \vtop{%
+    \hbox{\copy0}%
+    \kern-\dp0%
+    \kern1.15pt%
+    \hrule height 0.75pt width \wd0
+    \kern-1.15pt
+    \kern\dp0
+  }%
+  \endgroup
+}
 
 % docx indents (twips): 2832, 3544, 708
 \newlength{\synindentregalia}
@@ -81,7 +96,7 @@
 \noindent
 \synregaliatabbegin
 \synbackbold{Научный руководитель:} &
-\synbackbold{\supervisorFio\ \textendash\ \supervisorRegaliaTitleFirst,} \\[0pt]
+\synbackbold{\supervisorFio\ \textendash\ \supervisorRegaliaTitleFirst} \\[0pt]
 \mbox{} &
 \synbackbold{\supervisorRegaliaTitleRest}
 \end{tabular}
@@ -98,7 +113,7 @@
 \synvspace{12}
 \synvspace{14}
 \synvspace{14}
-\indent\synback{Защита состоится \synbackbold{число месяц год в 00 часов 00 минут} на заседании диссертационного совета \synbackbold{ШИФР СОВЕТА}, созданного на базе федерального государственного автономного образовательного учреждения высшего образования <<Московский физико-технический институт (национальный исследовательский университет)>> (МФТИ, Физтех)}
+\indent\synback{Защита состоится \synbackboldul{12 ноября 2026 в 15 часов 30 минут} на заседании диссертационного совета \synbackbold{ФПМИ.1.2.1.028}, созданного на базе федерального государственного автономного образовательного учреждения высшего образования <<Московский физико-технический институт (национальный исследовательский университет)>> (МФТИ, Физтех)}
 
 \indent\synbackbold{по адресу:} \synback{\defenseCouncilAddress}
 

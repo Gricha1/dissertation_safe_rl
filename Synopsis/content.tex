@@ -42,7 +42,7 @@
 
 В методе SPOWL модель мира используется при планировании кандидатных траекторий. Для каждой такой траектории оценивается не только ожидаемое вознаграждение, но и штрафы безопасности. При этом существенную роль играет функция будущих накопленных штрафов. Короткий горизонт планирования может не захватывать отложенный риск: траектория может выглядеть безопасной на ближайших шагах, но приводить к нарушению ограничений позже. Поэтому в SPOWL к сумме предсказанных мгновенных штрафов добавляется терминальная оценка будущих накопленных штрафов.
 
-Далее проводится сравнение полной конфигурации SPOWL с базовыми методами. Для компактного представления в \tabref{tab:synopsis_spowl_baselines} приведены результаты только для SafeDreamer и PPO-LAG(25). SafeDreamer выбран как базовый метод на основе модели мира, а PPO-LAG(25)~--- как представитель методов на основе функции лагранжиана без модели мира. В таблицу включены только две метрики: Reward и Cost.
+Далее проводится сравнение полной конфигурации SPOWL с базовыми методами. Для компактного представления в \tabref{tab:synopsis_spowl_baselines} приведены результаты только для SafeDreamer и PPO-LAG. SafeDreamer выбран как базовый метод на основе модели мира, а PPO-LAG~--- как представитель методов на основе функции лагранжиана без модели мира. В таблицу включены только две метрики: Reward и Cost.
 
 \begin{table}[ht]
 \centering
@@ -51,10 +51,10 @@
 \tiny
 \setlength{\tabcolsep}{2pt}
 \renewcommand{\arraystretch}{1.0}
-\resizebox{0.72\linewidth}{!}{%
+\resizebox{0.82\linewidth}{!}{%
 \begin{tabular}{@{}l rr rr rr@{}}
 \toprule
- & \multicolumn{2}{c}{\textbf{SPOWL}} & \multicolumn{2}{c}{\textbf{SafeDreamer}} & \multicolumn{2}{c}{\textbf{PPO-LAG(25)}} \\
+ & \multicolumn{2}{c}{\textbf{SPOWL}} & \multicolumn{2}{c}{\textbf{SafeDreamer}} & \multicolumn{2}{c}{\textbf{PPO-LAG}} \\
 \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7}
 Задача & Reward$\uparrow$ & Cost$\downarrow$ & Reward$\uparrow$ & Cost$\downarrow$ & Reward$\uparrow$ & Cost$\downarrow$ \\
 \midrule
@@ -67,7 +67,7 @@ AntGoal1 & 38.9 & 2.0 & 0.2 & 0.0 & 5.1 & 23.6 \\
 }
 \end{table}
 
-Из \tabref{tab:synopsis_spowl_baselines} видно, что SPOWL сохраняет более высокий уровень целевой эффективности при небольшом уровне штрафов. SafeDreamer во многих задачах удерживает штрафы на низком уровне, но часто делает это за счёт почти нулевого вознаграждения. PPO-LAG(25), напротив, в отдельных задачах получает ненулевое вознаграждение, но при этом накапливает существенно большие штрафы. Это показывает, что учёт будущих накопленных штрафов в модели мира позволяет получить более устойчивый баланс между достижением цели и безопасностью.
+Из \tabref{tab:synopsis_spowl_baselines} видно, что SPOWL сохраняет более высокий уровень целевой эффективности при небольшом уровне штрафов. SafeDreamer во многих задачах удерживает штрафы на низком уровне, но часто делает это за счёт почти нулевого вознаграждения. PPO-LAG, напротив, в отдельных задачах получает ненулевое вознаграждение, но при этом накапливает существенно большие штрафы. Это показывает, что учёт будущих накопленных штрафов в модели мира позволяет получить более устойчивый баланс между достижением цели и безопасностью.
 
 Следующий эксперимент проверяет влияние локальной и глобальной оценки штрафов траектории. В локальной оценке учитываются только мгновенные штрафы внутри горизонта планирования, а в глобальной к ним добавляется терминальная оценка будущих накопленных штрафов. Результаты показывают, что локальная оценка часто оказывается слишком оптимистичной и требует более жёстких порогов безопасности, тогда как глобальная позволяет учитывать отложенный риск и получать более устойчивый баланс между достижением цели и соблюдением ограничений.
 
@@ -96,7 +96,7 @@ AntGoal1 & 38.9 & 2.0 & 0.2 & 0.0 & 5.1 & 23.6 \\
 \centering
 \caption{Сравнение SG-Safe с базовыми методами на POLAMP. SR~--- доля успешных эпизодов, CR~--- частота столкновений, MTSC~--- средний накопленный штраф безопасности за эпизод. Значения усреднены по Level~1 и Level~2.}
 \label{tab:synopsis_sgsafe_polamp}
-\small
+\normalsize
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{1.05}
 \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}X >{\centering\arraybackslash}p{1.25cm} >{\centering\arraybackslash}p{1.25cm} >{\centering\arraybackslash}p{1.35cm}@{}}
@@ -120,7 +120,7 @@ L-RRT & 0.338 & 0.507 & 10.245 \\
 \centering
 \caption{Результаты на Safety Gym. SR~--- доля успешных эпизодов, CR~--- частота столкновений, MTSC~--- средний накопленный штраф безопасности за эпизод. Значения усреднены по средам Point, Car, Doggo и Sweeps.}
 \label{tab:synopsis_sgsafe_sg}
-\footnotesize
+\normalsize
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{1.0}
 \begin{tabular}{@{}lrrr@{}}
@@ -158,7 +158,7 @@ CPO & 0.51 & 0.44 & 117.1 \\
 \tiny
 \setlength{\tabcolsep}{2pt}
 \renewcommand{\arraystretch}{1.0}
-\resizebox{0.72\linewidth}{!}{%
+\resizebox{0.58\linewidth}{!}{%
 \begin{tabular}{@{}l rr rr rr@{}}
 \toprule
  & \multicolumn{2}{c}{\textbf{ITES}} & \multicolumn{2}{c}{\textbf{SafeDreamer}} & \multicolumn{2}{c}{\textbf{PPO-LAG}} \\
@@ -202,7 +202,7 @@ SafePusher & 0.42 & 12.8 & 0.00 & 6.7 & 0.00 & 51.25 \\
 \centering
 \caption{Таксономия задач Caged CrafText и проверяемых способностей агента. В ограничениях используются пиктограммы: \synemj{food.png} (еда), \synemj{drink.png} (вода), \synemj{energy.png} (энергия), \synemj{health.png} (здоровье), \synemj{wood_sword.png} (деревянный меч), \synemj{tree.png} (дерево), \synemj{cow.png} (корова), \synemj{zombie.png} (зомби), \synemj{skeleton.png} (скелет). M~--- memory, память; DE~--- deep exploration, глубокое исследование; SE~--- safe exploration, безопасное исследование; R~--- reasoning, рассуждение; LU~--- language understanding, понимание языка.}
 \label{tab:synopsis_caged_taxonomy}
-\footnotesize
+\fontsize{13}{15}\selectfont
 \setlength{\tabcolsep}{3.5pt}
 \renewcommand{\arraystretch}{1.15}
 \newlength{\synTaxScenarioW}
@@ -252,7 +252,7 @@ Avoid \synemj{zombie.png}\synemj{skeleton.png} within 3 cells & $\checkmark$ & &
 \tiny
 \setlength{\tabcolsep}{1.5pt}
 \renewcommand{\arraystretch}{1.0}
-\resizebox{0.88\linewidth}{!}{%
+\resizebox{0.72\linewidth}{!}{%
 \begin{tabular}{@{}l rr rr rr rr@{}}
 \toprule
  & \multicolumn{2}{c}{\textbf{PPO}} & \multicolumn{2}{c}{\textbf{PPO-LAG}} & \multicolumn{2}{c}{\textbf{PPO-Cost}} & \multicolumn{2}{c}{\textbf{LLM}} \\
@@ -295,5 +295,5 @@ PPO-Cost за счёт фиксированного штрафного коэф�
 
   \item Volovikova Z., Gorbov G., Kuderov P., Panov A., Skrynnik A. CrafText Benchmark: Advancing Instruction Following in Complex Multimodal Open-Ended World // Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers). -- 2025. -- P.~26131--26151.
 
-  \item Gorbov G., Latyshev A., Panov A. I. Imagine To Ensure Safety in Hierarchical Reinforcement Learning // arXiv preprint arXiv:2606.22509. -- 2026.
+  \item Gorbov G., Latyshev A., Panov A. I. Imagine to Ensure Safety in Hierarchical Reinforcement Learning // Machine Learning and Knowledge Extraction. -- 2026. -- Vol.~8, no.~8. -- Art.~243.
 \end{enumerate}
