@@ -193,6 +193,24 @@
     ``Benchmarking Safe Exploration in Deep Reinforcement Learning'', 2019.}
 \end{frame}
 
+\begin{frame}
+    \centering
+    \vfill
+    \setlength{\fboxsep}{1.0em}
+    \fcolorbox{MIPTBlue}{MIPTBlue!6}{%
+        \begin{minipage}{0.78\linewidth}
+            \centering
+            \textbf{\color{MIPTBlue}Задача 1. Анализ существующих методов}
+
+            \vspace{0.5em}
+            \large
+            Провести анализ существующих методов безопасного обучения с
+            подкреплением и сред, используемых для их экспериментальной оценки.
+        \end{minipage}%
+    }
+    \vfill
+\end{frame}
+
 \begin{frame}[shrink=12]{Основные подходы к безопасному обучению с подкреплением}
     \footnotesize
     \setlength{\abovedisplayskip}{0.3em}
@@ -326,6 +344,116 @@
     \footnotetext[1]{Источники: Huang et al., 2024; As et al., 2022; Jayant et al., 2022.}
 \end{frame}
 
+\begin{frame}[shrink=8]{Проблема безопасного исследования в задачах с большим горизонтом}
+    \begin{columns}[T,onlytextwidth]
+        \begin{column}{0.43\textwidth}
+            \footnotesize
+            \begin{block}{Признаки большого горизонта}
+            \begin{itemize}
+                \item большая последовательность шагов до цели;
+                \item разреженное вознаграждение;
+                \item большое пространство состояний и действий.
+            \end{itemize}
+            \end{block}
+
+            \vspace{0.35em}
+            \textcolor{red}{Добавление безопасности к RL-стратегии $\rightarrow$
+            исследование ухудшается $\rightarrow$
+            переход на задачи с большим горизонтом $\rightarrow$
+            робот стоит на месте.}
+        \end{column}
+
+        \begin{column}{0.55\textwidth}
+            \centering
+            \scriptsize
+            Базовые методы в задачах с большим горизонтом
+
+            \vspace{0.25em}
+            \textbf{SafeAntMaze-C}
+            \vspace{0.1em}
+
+            {\tiny
+            \setlength{\tabcolsep}{0.5pt}
+            \renewcommand{\arraystretch}{0.72}
+            \resizebox{0.68\linewidth}{!}{%
+            \begin{tabular}{lcc}
+                \toprule
+                Method & Final SR$\uparrow$ & Final Cost$\downarrow$ \\
+                \midrule
+                SafeDreamer & \(0\) & \(13 \pm 18.11\) \\
+                CUP & \(0\) & \(6.8 \pm 22.4\) \\
+                FOCOPS & \(0\) & \(19.4 \pm 50.9\) \\
+                PPOLAG & \(0.2 \pm 0.2\) & \(41.2 \pm 1.1\) \\
+                TD3LAG & \(0.13 \pm 0.33\) & \(133.45 \pm 184.4\) \\
+                \bottomrule
+            \end{tabular}%
+            }}
+
+            \vspace{0.45em}
+            \textbf{SafePusher}
+            \vspace{0.1em}
+
+            {\tiny
+            \setlength{\tabcolsep}{0.5pt}
+            \renewcommand{\arraystretch}{0.72}
+            \resizebox{0.68\linewidth}{!}{%
+            \begin{tabular}{lcc}
+                \toprule
+                Method & Final SR$\uparrow$ & Final Cost$\downarrow$ \\
+                \midrule
+                SafeDreamer & \(0\) & \(6.7 \pm 2.7\) \\
+                TD3LAG & \(0.05 \pm 0.03\) & \(54.72 \pm 3.16\) \\
+                CUP & \(0.01\) & \(46.14 \pm 0.42\) \\
+                FOCOPS & \(0\) & \(55.83 \pm 1.67\) \\
+                PPOLAG & \(0\) & \(51.25 \pm 1.25\) \\
+                \bottomrule
+            \end{tabular}%
+            }}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}[shrink=5]{Ограничения существующих бенчмарков для естественно-языковой безопасности}
+    \small
+    \begin{block}{Постановка}
+        \textbf{В реальных задачах ограничения безопасности могут задаваться
+        пользователем на естественном языке}, а не в виде заранее определённой
+        численной функции штрафа.
+    \end{block}
+
+    \vspace{0.3em}
+    \begin{alertblock}{Ограничения существующих бенчмарков}
+        \begin{itemize}
+            \item рассматриваются преимущественно \textbf{простые навигационные
+                  задачи};
+            \item цель часто задаётся \textbf{в структурированном виде}, а не
+                  естественным языком;
+            \item не позволяют полноценно оценивать \textbf{понимание языка,
+                  grounding и память агента};
+            \item недостаточно отражают сложные динамические среды, требующие
+                  длинных последовательностей действий.
+        \end{itemize}
+    \end{alertblock}
+\end{frame}
+
+\begin{frame}
+    \centering
+    \vfill
+    \setlength{\fboxsep}{1.0em}
+    \fcolorbox{MIPTBlue}{MIPTBlue!6}{%
+        \begin{minipage}{0.78\linewidth}
+            \centering
+            \textbf{\color{MIPTBlue}Задача 2. Учёт долгосрочного риска}
+
+            \vspace{0.5em}
+            \large
+            Разработать подход для учёта долгосрочного риска в методах
+            безопасного обучения с подкреплением на основе модели мира.
+        \end{minipage}%
+    }
+    \vfill
+\end{frame}
+
 \section{SPOWL: оценка риска с помощью модели мира}
 
 \begin{frame}{SPOWL: неявная модель мира}
@@ -422,57 +550,74 @@
     \end{columns}
 \end{frame}
 
+\begin{frame}{SPOWL: локальная и глобальная оценки штрафов}
+    \centering
+    \includegraphics[height=0.76\textheight]{spowl_local_global_all_thresholds}
+\end{frame}
+
 \begin{frame}[shrink=12]{SPOWL: сравнение с базовыми методами}
     \setlength{\tabcolsep}{0.5pt}
     \renewcommand{\arraystretch}{0.68}
+    \begin{center}
+        {\setlength{\fboxsep}{0.55em}%
+        \fcolorbox{red}{red!5}{%
+            \begin{minipage}{0.94\linewidth}
+                \scriptsize
+                За счёт оценки будущих накопленных штрафов и их ансамблевой
+                агрегации SPOWL повышает эпизодическое вознаграждение
+                \textcolor{black}{(R)} по сравнению с SafeDreamer при сохранении
+                низкого уровня штрафов \textcolor{black}{(C)}.
+            \end{minipage}%
+        }}
+    \end{center}
+    \vspace{-0.2em}
     \begin{columns}[T,onlytextwidth]
         \begin{column}{0.76\textwidth}
             \centering
             \tiny
-    \resizebox{!}{0.50\textheight}{%
+    \hspace*{-0.55cm}\resizebox{!}{0.40\textheight}{%
     \begin{tabular}{lr|rrrr}
         \toprule
-        Task & Metric & \textbf{SPOWL} & TD-MPC2 & SafeDreamer & PPOLag(25) \\
+        Task & Metric & \cellcolor{MIPTBlue!12}\textbf{SPOWL} & \cellcolor{MIPTBlue!12}SafeDreamer & TD-MPC2 & PPOLag(25) \\
         \midrule
         \multirow{3}{*}{PG1}
-            & \(R\uparrow\) & \(26.9 \pm 0.4\) & \(27.5 \pm 0.2\) & \(12.0 \pm 4.0\) & \(14.5 \pm 0.6\) \\
-            & \(C\downarrow\) & \(1.5 \pm 1.1\) & \(52.3 \pm 8.6\) & \(10.3 \pm 9.5\) & \(19.7 \pm 3.0\) \\
-            & \(\rho\downarrow\) & \(133 \pm 2\) & \(515 \pm 9\) & \(160 \pm 16\) & \(361 \pm 20\) \\
+            & \cellcolor{yellow!25}\textbf{\(R\uparrow\)} & \cellcolor{yellow!25}\(\mathbf{26.9 \pm 0.4}\) & \cellcolor{yellow!25}\(\mathbf{12.0 \pm 4.0}\) & \(27.5 \pm 0.2\) & \(14.5 \pm 0.6\) \\
+            & \cellcolor{green!20}\textbf{\(C\downarrow\)} & \cellcolor{green!20}\(\mathbf{1.5 \pm 1.1}\) & \cellcolor{green!20}\(\mathbf{10.3 \pm 9.5}\) & \(52.3 \pm 8.6\) & \(19.7 \pm 3.0\) \\
+            & \(\rho\downarrow\) & \(133 \pm 2\) & \(160 \pm 16\) & \(515 \pm 9\) & \(361 \pm 20\) \\
         \midrule
         \multirow{3}{*}{PG2}
-            & \(R\uparrow\) & \(13.7 \pm 3.2\) & \(27.4 \pm 0.5\) & \(5.2 \pm 3.9\) & \(2.0 \pm 0.9\) \\
-            & \(C\downarrow\) & \(4.8 \pm 1.2\) & \(179.0 \pm 12.2\) & \(0 \pm 0\) & \(33.7 \pm 16.3\) \\
-            & \(\rho\downarrow\) & \(280 \pm 5\) & \(1641 \pm 18\) & \(221 \pm 32\) & \(570 \pm 73\) \\
+            & \cellcolor{yellow!25}\textbf{\(R\uparrow\)} & \cellcolor{yellow!25}\(\mathbf{13.7 \pm 3.2}\) & \cellcolor{yellow!25}\(\mathbf{5.2 \pm 3.9}\) & \(27.4 \pm 0.5\) & \(2.0 \pm 0.9\) \\
+            & \cellcolor{green!20}\textbf{\(C\downarrow\)} & \cellcolor{green!20}\(\mathbf{4.8 \pm 1.2}\) & \cellcolor{green!20}\(\mathbf{0 \pm 0}\) & \(179.0 \pm 12.2\) & \(33.7 \pm 16.3\) \\
+            & \(\rho\downarrow\) & \(280 \pm 5\) & \(221 \pm 32\) & \(1641 \pm 18\) & \(570 \pm 73\) \\
         \midrule
         \multirow{3}{*}{PP1}
-            & \(R\uparrow\) & \(18.7 \pm 1.4\) & \(20.8 \pm 0.6\) & \(12.5 \pm 7.2\) & \(4.4 \pm 2.7\) \\
-            & \(C\downarrow\) & \(1.8 \pm 2.5\) & \(34.2 \pm 11.6\) & \(7.3 \pm 10.4\) & \(24.2 \pm 12.4\) \\
-            & \(\rho\downarrow\) & \(103 \pm 5\) & \(353 \pm 6\) & \(71 \pm 3\) & \(276 \pm 16\) \\
+            & \cellcolor{yellow!25}\textbf{\(R\uparrow\)} & \cellcolor{yellow!25}\(\mathbf{18.7 \pm 1.4}\) & \cellcolor{yellow!25}\(\mathbf{12.5 \pm 7.2}\) & \(20.8 \pm 0.6\) & \(4.4 \pm 2.7\) \\
+            & \cellcolor{green!20}\textbf{\(C\downarrow\)} & \cellcolor{green!20}\(\mathbf{1.8 \pm 2.5}\) & \cellcolor{green!20}\(\mathbf{7.3 \pm 10.4}\) & \(34.2 \pm 11.6\) & \(24.2 \pm 12.4\) \\
+            & \(\rho\downarrow\) & \(103 \pm 5\) & \(71 \pm 3\) & \(353 \pm 6\) & \(276 \pm 16\) \\
         \midrule
         \multirow{3}{*}{PB1}
-            & \(R\uparrow\) & \(10.0 \pm 1.5\) & \(33.4 \pm 0.4\) & \(0.1 \pm 1.4\) & \(3.7 \pm 2.5\) \\
-            & \(C\downarrow\) & \(5.4 \pm 2.7\) & \(103.3 \pm 3.1\) & \(0.3 \pm 0.5\) & \(33.6 \pm 7.7\) \\
-            & \(\rho\downarrow\) & \(269 \pm 3\) & \(1219 \pm 10\) & \(159 \pm 3\) & \(392 \pm 27\) \\
+            & \cellcolor{yellow!25}\textbf{\(R\uparrow\)} & \cellcolor{yellow!25}\(\mathbf{10.0 \pm 1.5}\) & \cellcolor{yellow!25}\(\mathbf{0.1 \pm 1.4}\) & \(33.4 \pm 0.4\) & \(3.7 \pm 2.5\) \\
+            & \cellcolor{green!20}\textbf{\(C\downarrow\)} & \cellcolor{green!20}\(\mathbf{5.4 \pm 2.7}\) & \cellcolor{green!20}\(\mathbf{0.3 \pm 0.5}\) & \(103.3 \pm 3.1\) & \(33.6 \pm 7.7\) \\
+            & \(\rho\downarrow\) & \(269 \pm 3\) & \(159 \pm 3\) & \(1219 \pm 10\) & \(392 \pm 27\) \\
         \midrule
         \multirow{3}{*}{CG1}
-            & \(R\uparrow\) & \(31.3 \pm 0.8\) & \(34.8 \pm 0.3\) & \(6.6 \pm 1.2\) & \(18.4 \pm 3.9\) \\
-            & \(C\downarrow\) & \(1.0 \pm 1.0\) & \(51.2 \pm 7.9\) & \(0 \pm 0\) & \(30.5 \pm 5.0\) \\
-            & \(\rho\downarrow\) & \(113 \pm 2\) & \(563 \pm 11\) & \(127 \pm 15\) & \(345 \pm 9\) \\
+            & \cellcolor{yellow!25}\textbf{\(R\uparrow\)} & \cellcolor{yellow!25}\(\mathbf{31.3 \pm 0.8}\) & \cellcolor{yellow!25}\(\mathbf{6.6 \pm 1.2}\) & \(34.8 \pm 0.3\) & \(18.4 \pm 3.9\) \\
+            & \cellcolor{green!20}\textbf{\(C\downarrow\)} & \cellcolor{green!20}\(\mathbf{1.0 \pm 1.0}\) & \cellcolor{green!20}\(\mathbf{0 \pm 0}\) & \(51.2 \pm 7.9\) & \(30.5 \pm 5.0\) \\
+            & \(\rho\downarrow\) & \(113 \pm 2\) & \(127 \pm 15\) & \(563 \pm 11\) & \(345 \pm 9\) \\
         \midrule
         \multirow{3}{*}{DG1}
-            & \(R\uparrow\) & \(19.0 \pm 1.9\) & \(27.9 \pm 1.5\) & \(1.1 \pm 0.9\) & \(0 \pm 0\) \\
-            & \(C\downarrow\) & \(0.3 \pm 0.4\) & \(72.6 \pm 20.6\) & \(0 \pm 0\) & \(21.8 \pm 30.8\) \\
-            & \(\rho\downarrow\) & \(286 \pm 15\) & \(659 \pm 33\) & \(260 \pm 70\) & \(376 \pm 70\) \\
+            & \cellcolor{yellow!25}\textbf{\(R\uparrow\)} & \cellcolor{yellow!25}\(\mathbf{19.0 \pm 1.9}\) & \cellcolor{yellow!25}\(\mathbf{1.1 \pm 0.9}\) & \(27.9 \pm 1.5\) & \(0 \pm 0\) \\
+            & \cellcolor{green!20}\textbf{\(C\downarrow\)} & \cellcolor{green!20}\(\mathbf{0.3 \pm 0.4}\) & \cellcolor{green!20}\(\mathbf{0 \pm 0}\) & \(72.6 \pm 20.6\) & \(21.8 \pm 30.8\) \\
+            & \(\rho\downarrow\) & \(286 \pm 15\) & \(260 \pm 70\) & \(659 \pm 33\) & \(376 \pm 70\) \\
         \midrule
         \multirow{3}{*}{AG1}
-            & \(R\uparrow\) & \(38.9 \pm 1.4\) & \(61.0 \pm 2.6\) & \(0.2 \pm 0.2\) & \(5.1 \pm 3.9\) \\
-            & \(C\downarrow\) & \(2.0 \pm 0.2\) & \(70.9 \pm 6.0\) & \(0 \pm 0\) & \(23.6 \pm 18.2\) \\
-            & \(\rho\downarrow\) & \(275 \pm 6\) & \(682 \pm 6\) & \(218 \pm 58\) & \(638 \pm 115\) \\
+            & \cellcolor{yellow!25}\textbf{\(R\uparrow\)} & \cellcolor{yellow!25}\(\mathbf{38.9 \pm 1.4}\) & \cellcolor{yellow!25}\(\mathbf{0.2 \pm 0.2}\) & \(61.0 \pm 2.6\) & \(5.1 \pm 3.9\) \\
+            & \cellcolor{green!20}\textbf{\(C\downarrow\)} & \cellcolor{green!20}\(\mathbf{2.0 \pm 0.2}\) & \cellcolor{green!20}\(\mathbf{0 \pm 0}\) & \(70.9 \pm 6.0\) & \(23.6 \pm 18.2\) \\
+            & \(\rho\downarrow\) & \(275 \pm 6\) & \(218 \pm 58\) & \(682 \pm 6\) & \(638 \pm 115\) \\
         \bottomrule
     \end{tabular}}
         \end{column}
         \begin{column}{0.22\textwidth}
-            \vspace{1.0em}
             \scriptsize
             \begin{block}{Метрики}
                 \(R\uparrow\) --- среднее вознаграждение.
@@ -483,9 +628,6 @@
                 \vspace{0.6em}
                 \(\rho\downarrow\) --- средний штраф за шаг \((\times 10^4)\).
 
-                \vspace{0.6em}
-                ET$\downarrow$ --- время генерации одного действия
-                при инференсе: $4.0\cdot 10^{-2}$~с.
             \end{block}
 
             \vfill
@@ -496,78 +638,22 @@
     \end{columns}
 \end{frame}
 
-\begin{frame}{SPOWL: локальная и глобальная оценки штрафов}
+\begin{frame}
     \centering
-    \includegraphics[height=0.76\textheight]{spowl_local_global_all_thresholds}
-\end{frame}
-
-\begin{frame}[shrink=8]{Проблема безопасного исследования в задачах с большим горизонтом}
-    \begin{columns}[T,onlytextwidth]
-        \begin{column}{0.43\textwidth}
-            \small
-            Добавление безопасности к RL-стратегии $\rightarrow$
-            исследование ухудшается $\rightarrow$
-            переход на задачи с большим горизонтом $\rightarrow$
-            робот стоит на месте.
-
-            \vspace{0.35em}
-            \begin{alertblock}{Признаки большого горизонта}
-            \begin{itemize}
-                \item большая последовательность шагов до цели;
-                \item разреженное вознаграждение;
-                \item большое пространство состояний и действий.
-            \end{itemize}
-            \end{alertblock}
-        \end{column}
-
-        \begin{column}{0.55\textwidth}
+    \vfill
+    \setlength{\fboxsep}{1.0em}
+    \fcolorbox{MIPTBlue}{MIPTBlue!6}{%
+        \begin{minipage}{0.78\linewidth}
             \centering
-            \scriptsize
-            Базовые методы в задачах с большим горизонтом
+            \textbf{\color{MIPTBlue}Задача 3. Безопасное исследование с подцелями}
 
-            \vspace{0.25em}
-            \textbf{SafeAntMaze-C}
-            \vspace{0.1em}
-
-            {\tiny
-            \setlength{\tabcolsep}{0.5pt}
-            \renewcommand{\arraystretch}{0.72}
-            \resizebox{0.68\linewidth}{!}{%
-            \begin{tabular}{lcc}
-                \toprule
-                Method & Final SR$\uparrow$ & Final Cost$\downarrow$ \\
-                \midrule
-                SafeDreamer & \(0\) & \(13 \pm 18.11\) \\
-                CUP & \(0\) & \(6.8 \pm 22.4\) \\
-                FOCOPS & \(0\) & \(19.4 \pm 50.9\) \\
-                PPOLAG & \(0.2 \pm 0.2\) & \(41.2 \pm 1.1\) \\
-                TD3LAG & \(0.13 \pm 0.33\) & \(133.45 \pm 184.4\) \\
-                \bottomrule
-            \end{tabular}%
-            }}
-
-            \vspace{0.45em}
-            \textbf{SafePusher}
-            \vspace{0.1em}
-
-            {\tiny
-            \setlength{\tabcolsep}{0.5pt}
-            \renewcommand{\arraystretch}{0.72}
-            \resizebox{0.68\linewidth}{!}{%
-            \begin{tabular}{lcc}
-                \toprule
-                Method & Final SR$\uparrow$ & Final Cost$\downarrow$ \\
-                \midrule
-                SafeDreamer & \(0\) & \(6.7 \pm 2.7\) \\
-                TD3LAG & \(0.05 \pm 0.03\) & \(54.72 \pm 3.16\) \\
-                CUP & \(0.01\) & \(46.14 \pm 0.42\) \\
-                FOCOPS & \(0\) & \(55.83 \pm 1.67\) \\
-                PPOLAG & \(0\) & \(51.25 \pm 1.25\) \\
-                \bottomrule
-            \end{tabular}%
-            }}
-        \end{column}
-    \end{columns}
+            \vspace{0.5em}
+            \large
+            Разработать подход на основе иерархического обучения с
+            подкреплением для решения задачи безопасного исследования.
+        \end{minipage}%
+    }
+    \vfill
 \end{frame}
 
 \section{Безопасное исследование: SG-Safe}
@@ -684,11 +770,17 @@
 
 \begin{frame}[shrink=8]{SG-Safe: эксперименты на POLAMP}
     \centering
-    \scriptsize
-    SR~--- доля успешных эпизодов, CR~--- частота столкновений,
-    Cost~--- средний накопленный штраф за эпизод.
-    Красным выделены методы с привилегированной информацией и/или
-    явными моделями. Среднее~$\pm$~стандартное отклонение.
+    \begin{center}
+        {\setlength{\fboxsep}{0.55em}%
+        \fcolorbox{red}{red!5}{%
+            \begin{minipage}{0.94\linewidth}
+                \scriptsize
+                За счёт промежуточных подцелей SG-Safe достигает на POLAMP
+                Level~2 \(SR = 0.875\) при \(CR = 0.031\), тогда как базовые
+                Safe RL методы практически не решают задачу.
+            \end{minipage}%
+        }}
+    \end{center}
 
     \vspace{0.25em}
     \tiny
@@ -711,10 +803,10 @@
             SAC & $0.610\pm0.040$ & $0.023\pm0.014$ & $11.252\pm3.718$ \\
             SAC-NCMP & $0.427\pm0.000$ & $0.573\pm0.000$ &
             $\mathbf{0.869\pm0.015}$ \\
-            \rowcolor{red!10} SAC-RCBF & $0.344\pm0.032$ & $0.240\pm0.025$ &
+            SAC-RCBF & $0.344\pm0.032$ & $0.240\pm0.025$ &
             $4.456\pm3.076$ \\
             ADVICE & $0.000\pm0.000$ & $0.031\pm0.000$ & $0.031\pm0.000$ \\
-            \rowcolor{red!10} L-RRT & $0.551\pm0.152$ & $0.350\pm0.028$ &
+            L-RRT & $0.551\pm0.152$ & $0.350\pm0.028$ &
             $8.335\pm1.898$ \\
             \bottomrule
             \end{tabular}%
@@ -736,11 +828,11 @@
             $1.319\pm0.802$ \\
             SAC & $0.000\pm0.000$ & $0.010\pm0.015$ & $5.054\pm2.325$ \\
             SAC-NCMP & $0.000\pm0.000$ & $1.000\pm0.000$ & $1.369\pm0.020$ \\
-            \rowcolor{red!10} SAC-RCBF & $0.008\pm0.010$ & $0.050\pm0.025$ &
+            SAC-RCBF & $0.008\pm0.010$ & $0.050\pm0.025$ &
             $8.625\pm1.823$ \\
             ADVICE & $0.000\pm0.000$ & $0.010\pm0.000$ &
             $\mathbf{0.010\pm0.000}$ \\
-            \rowcolor{red!10} L-RRT & $0.125\pm0.050$ & $0.664\pm0.165$ &
+            L-RRT & $0.125\pm0.050$ & $0.664\pm0.165$ &
             $12.154\pm4.167$ \\
             \bottomrule
             \end{tabular}%
@@ -764,10 +856,10 @@
             SAC-LAG & $0.364\pm0.006$ & $\mathbf{0.017\pm0.005}$ & $4.042\pm1.530$ \\
             SAC & $0.305\pm0.020$ & $\mathbf{0.017\pm0.010}$ & $8.153\pm2.192$ \\
             SAC-NCMP & $0.214\pm0.000$ & $0.787\pm0.000$ & $1.119\pm0.012$ \\
-            \rowcolor{red!10} SAC-RCBF & $0.176\pm0.017$ & $0.145\pm0.017$ &
+            SAC-RCBF & $0.176\pm0.017$ & $0.145\pm0.017$ &
             $6.541\pm1.788$ \\
             ADVICE & $0.000\pm0.000$ & $0.021\pm0.000$ & $\mathbf{0.021\pm0.000}$ \\
-            \rowcolor{red!10} L-RRT & $0.338\pm0.080$ & $0.507\pm0.084$ &
+            L-RRT & $0.338\pm0.080$ & $0.507\pm0.084$ &
             $10.245\pm2.289$ \\
             \bottomrule
             \end{tabular}%
@@ -776,10 +868,6 @@
         \begin{column}{0.38\textwidth}
             \vspace{0.9em}
             \centering
-            \textbf{Среда POLAMP}\\
-            \scriptsize навигационная задача с большим горизонтом
-            \vspace{0.2em}
-
             \animategraphics[
                 autoplay,
                 loop,
@@ -787,6 +875,24 @@
             ]{8}{Presentation/images/sgsafe_polamp_frames/frame_}{001}{060}
         \end{column}
     \end{columns}
+\end{frame}
+
+\begin{frame}
+    \centering
+    \vfill
+    \setlength{\fboxsep}{1.0em}
+    \fcolorbox{MIPTBlue}{MIPTBlue!6}{%
+        \begin{minipage}{0.78\linewidth}
+            \centering
+            \textbf{\color{MIPTBlue}Задача 4. Безопасная генерация подцелей}
+
+            \vspace{0.5em}
+            \large
+            Разработать метод генерации безопасных подцелей с использованием
+            модели мира для задач с большим горизонтом.
+        \end{minipage}%
+    }
+    \vfill
 \end{frame}
 
 \section{Безопасная иерархия: ITES}
@@ -951,16 +1057,24 @@
 
 \begin{frame}[shrink=8]{Задачи навигации и манипуляции с большим горизонтом}
     \scriptsize
+    \begin{center}
+        {\setlength{\fboxsep}{0.55em}%
+        \fcolorbox{red}{red!5}{%
+            \begin{minipage}{0.94\linewidth}
+                \scriptsize
+                За счёт контроля безопасности при генерации и достижении
+                подцелей ITES обеспечивает успешное решение задач большого
+                горизонта при соблюдении ограничений безопасности, тогда как
+                большинство базовых методов либо не достигают цели, либо
+                нарушают ограничения.
+            \end{minipage}%
+        }}
+    \end{center}
+    \vspace{0.15em}
+
     \begin{columns}[T,onlytextwidth]
         \begin{column}{0.60\textwidth}
             \centering
-            Итоговые результаты на SafeAntMaze и SafePusher.
-            SAM-C~--- SafeAntMaze C-shape, SAM-W~--- SafeAntMaze W-shape,
-            SR~--- доля успешных эпизодов.
-            Методы с Cost~$\leqslant d$ выделены зелёным, нарушающие~---
-            красным. Усреднение по 5 запускам.
-
-            \vspace{0.15em}
             \tiny
             \setlength{\tabcolsep}{1pt}
             \renewcommand{\arraystretch}{0.75}
@@ -1051,14 +1165,38 @@
 
 \begin{frame}{ITES: абляция компонентов безопасности}
     \centering
-    \includegraphics[width=0.72\linewidth]{Ablation_SafeAntMazeCshape_3}
+    {\setlength{\fboxsep}{0.55em}%
+    \fcolorbox{red}{red!5}{%
+        \begin{minipage}{0.82\linewidth}
+            \footnotesize
+            \textbf{Влияние безопасных подцелей на обучение}
+
+            Отсутствие безопасности в подцелях приводит к такому же Success Rate,
+            но гораздо большим нарушениям Cost (зелёный график).
+        \end{minipage}%
+    }}
 
     \vspace{0.3em}
-    \begin{block}{Влияние безопасных подцелей на обучение}
-        \small
-        Отсутствие безопасности в подцелях приводит к такому же Success Rate, но
-        гораздо большим нарушениям Cost (зелёный график).
-    \end{block}
+    \includegraphics[width=0.72\linewidth]{Ablation_SafeAntMazeCshape_3}
+\end{frame}
+
+\begin{frame}
+    \centering
+    \vfill
+    \setlength{\fboxsep}{1.0em}
+    \fcolorbox{MIPTBlue}{MIPTBlue!6}{%
+        \begin{minipage}{0.78\linewidth}
+            \centering
+            \textbf{\color{MIPTBlue}Задача 5. Естественно-языковые ограничения}
+
+            \vspace{0.5em}
+            \large
+            Разработать бенчмарк для обучения и оценки методов безопасного
+            обучения с подкреплением в задачах с целями и ограничениями на
+            естественном языке.
+        \end{minipage}%
+    }
+    \vfill
 \end{frame}
 
 \section{Текстовые ограничения: Caged CrafText}
@@ -1128,7 +1266,22 @@
     \end{columns}
 \end{frame}
 
-\begin{frame}{Caged CrafText: сравнение базовых методов}
+\begin{frame}[shrink=5]{Caged CrafText: сравнение базовых методов}
+    \begin{center}
+        {\setlength{\fboxsep}{0.55em}%
+        \fcolorbox{red}{red!5}{%
+            \begin{minipage}{0.94\linewidth}
+                \scriptsize
+                Существующие подходы по-разному не справляются с задачами
+                Caged CrafText: Safe RL-методы снижают нарушения за счёт
+                консервативного поведения и ухудшения исследования, тогда как
+                LLM-агент лучше выполняет целевую инструкцию, но хуже соблюдает
+                текстовые ограничения безопасности.
+            \end{minipage}%
+        }}
+    \end{center}
+    \vspace{0.15em}
+
     \begin{columns}[c,onlytextwidth]
         \begin{column}{0.59\textwidth}
             \vfill
@@ -1143,15 +1296,15 @@
             \setlength{\extrarowheight}{2pt}
             \renewcommand{\arraystretch}{1.25}
             \resizebox{\linewidth}{!}{%
-            \begin{tabular}{lrrrrrrrr}
+            \begin{tabular}{lrr>{\columncolor{yellow!22}}rr>{\columncolor{yellow!22}}rrr>{\columncolor{red!15}}r}
                 \hline
                 \multirow{2}{*}{\textbf{Набор задач}} &
                 \multicolumn{2}{c}{\textbf{PPO}} &
                 \multicolumn{2}{c}{\textbf{PPO-LAG}} &
                 \multicolumn{2}{c}{\textbf{PPO-Cost}} &
                 \multicolumn{2}{c}{\textbf{LLM}} \\
-                & \(R\uparrow\) & \(C\downarrow\) & \(R\uparrow\) & \(C\downarrow\) &
-                \(R\uparrow\) & \(C\downarrow\) & \(R\uparrow\) & \(C\downarrow\) \\
+                & \(R\uparrow\) & \(C\downarrow\) & \cellcolor{yellow!22}\(R\uparrow\) & \(C\downarrow\) &
+                \cellcolor{yellow!22}\(R\uparrow\) & \(C\downarrow\) & \(R\uparrow\) & \cellcolor{red!15}\(C\downarrow\) \\
                 \hline
                 Budgetary All \((d=0.1)\) & 0.23 & 11.38 & 0.05 & 0.36 & 0.11 & \textbf{0.12} & 0.19 & 40.1 \\
                 Sequential All \((d=0.1)\) & \textbf{0.24} & 7.65 & 0.05 & 1.02 & 0.08 & \textbf{0.82} & 0.19 & 22.7 \\
@@ -1185,7 +1338,7 @@
 
 \begin{frame}{Практическая значимость}
     \begin{itemize}
-        \item Метод SPEIS можно применять в робототехнических задачах с коротким
+        \item Метод SPOWL можно применять в робототехнических задачах с коротким
               горизонтом, например в задачах навигации в офисных помещениях.
         \item Методы SG-Safe и ITES могут быть применимы в задачах с большим
               горизонтом, в узких пространствах, например навигации в шахтах;
@@ -1216,23 +1369,22 @@
 
             \vspace{0.2em}
             Основные результаты по теме диссертации изложены в 5 публикациях:
-            2~--- в журналах категории~К1 собственного перечня журналов МФТИ,
-            2~--- в сборниках трудов конференций уровня~A и~A*,
-            1~--- в виде препринта на arXiv.
+            3~--- в журналах категории~К1 собственного перечня журналов МФТИ,
+            2~--- в сборниках трудов конференций уровня~A и~A*.
 
             \vspace{0.25em}
-            \begin{itemize}
-                \item \textbf{SG-Safe}~--- журнал Technologies издательства MDPI, 2026,
-                      категория~К1 перечня МФТИ, Q1;
-                \item \textbf{Caged CrafText}~--- журнал Optical Memory and Neural
-                      Networks, 2026, категория~К1;
-                \item \textbf{SPOWL}~--- материалы ECAI 2025, конференция
-                      уровня~A;
-                \item \textbf{CrafText benchmark}~--- ACL 2025,
-                      конференция уровня~A*;
-                \item \textbf{ITES}~--- журнал MAKE издательства
-                      MDPI, 2026, категория К1 перечня МФТИ, Q1;
-            \end{itemize}
+            \begin{enumerate}
+                \item \textbf{SG-Safe}~--- \textit{Technologies}, MDPI, 2026;
+                      \textbf{Scopus Q1, ВАК К1};
+                \item \textbf{Caged CrafText}~--- \textit{Optical Memory and
+                      Neural Networks}, 2026; \textbf{ВАК К1};
+                \item \textbf{SPOWL}~--- ECAI 2025, конференция уровня
+                      \textbf{A};
+                \item \textbf{CrafText benchmark}~--- ACL 2025, конференция
+                      уровня \textbf{A*};
+                \item \textbf{ITES}~--- \textit{Machine Learning and Knowledge
+                      Extraction (MAKE)}, MDPI, 2026; \textbf{Scopus Q1, ВАК К1}.
+            \end{enumerate}
         \end{column}
         \begin{column}{0.46\textwidth}
             \textbf{Апробация результатов:}
