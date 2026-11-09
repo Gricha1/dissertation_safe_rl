@@ -53,11 +53,13 @@
         Короткий горизонт, плотное (евклидово) вознаграждение
             & \textbf{SPOWL}: модель мира и оценка долгосрочного риска,
               лучшие результаты на Safety Gym \\
+        \midrule[0.2pt]
         Большой горизонт, разреженное вознаграждение; жёсткие ограничения
         по памяти и скорости инференса
             & \textbf{SG-Safe}: подцели снимают чрезмерную консервативность
               безопасной стратегии (робот в лабиринте); генератор подцелей
               нужен только при обучении \\
+        \midrule[0.2pt]
         Нужно контролировать безопасность и выбора подцелей, и их достижения
             & \textbf{ITES}: безопасность на обоих уровнях иерархии; подходит
               для манипуляции (подойти к объекту, сдвинуть его в нужном
@@ -96,7 +98,8 @@
     каких случаях использование иерархической структуры может оказаться
     избыточным?}
 
-\begin{frame}[noframenumbering]{Ответ на вопрос 3. Райгородский А.М.}
+\begin{frame}[noframenumbering,shrink=5]{Ответ на вопрос 3. Райгородский А.М.}
+    \small
     \begin{itemize}
         \item При коротком горизонте и плотном вознаграждении (например, за
               приближение к цели) одноуровневая стратегия получает достаточно
@@ -110,6 +113,55 @@
         \item В таких задачах промежуточные подцели полезнее обычного
               reward shaping.
     \end{itemize}
+
+    \vspace{0.2em}
+    \centering
+    Safety Gym (короткий горизонт): иерархические методы не уступают
+    одноуровневым
+
+    \vspace{0.4em}
+    \scriptsize
+    \renewcommand{\arraystretch}{1.1}
+    \begin{columns}[T,onlytextwidth]
+        \begin{column}{0.47\textwidth}
+            \centering
+            \textbf{ITES}
+
+            \vspace{0.2em}
+            \begin{tabular}{llcc}
+                \toprule
+                Env & Method & Reward$\uparrow$ & Cost$\downarrow$ \\
+                \midrule
+                PG1 & \textbf{ITES} & \textbf{19.6} & 32.83 \\
+                    & FOCOPS & 14.97 & 33.72 \\
+                    & PPOLAG & 12.96 & \textbf{25.80} \\
+                \midrule[0.2pt]
+                CG1 & \textbf{ITES} & \textbf{18.3} & \textbf{21.72} \\
+                    & FOCOPS & 15.23 & 31.66 \\
+                    & PPOLAG & 13.27 & \textbf{21.72} \\
+                \bottomrule
+            \end{tabular}
+        \end{column}
+        \begin{column}{0.47\textwidth}
+            \centering
+            \textbf{SG-Safe}
+
+            \vspace{0.2em}
+            \begin{tabular}{llccc}
+                \toprule
+                Env & Method & SR$\uparrow$ & CR$\downarrow$ & Cost$\downarrow$ \\
+                \midrule
+                Doggo  & \textbf{SG-Safe} & \textbf{0.79} & \textbf{0.05} & \textbf{12.5} \\
+                       & SAC-LAG & 0.02 & 0.10 & 22.6 \\
+                       & CPO     & 0.65 & 0.30 & 86.8 \\
+                \midrule[0.2pt]
+                Sweeps & \textbf{SG-Safe} & \textbf{1} & \textbf{0} & \textbf{0.98} \\
+                       & SAC-LAG & 0.47 & \textbf{0} & 1.25 \\
+                       & CPO     & 0.15 & 0.85 & 102 \\
+                \bottomrule
+            \end{tabular}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 % ---------------------------------------------------------------------------
@@ -122,21 +174,18 @@
     недооценкой риска и чрезмерно консервативным поведением агента? Почему в
     работе выбран используемый способ агрегации?}
 
-\begin{frame}[noframenumbering,shrink=5]{Ответ на вопрос 1. Гаврилов Д.А.}
-    \small
-    Исследованы три способа агрегации ансамбля $\{\hat{Q}^c_j\}_{j=1}^{N}$:
+\begin{frame}[noframenumbering]{Ответ на вопрос 1. Гаврилов Д.А.}
+    \footnotesize
     \begin{itemize}
-        \item \textbf{минимум} --- самая оптимистичная оценка риска: агент
-              активнее исследует, но если хотя бы один критик недооценивает
-              штрафы, планировщик выбирает небезопасную траекторию; итоговый
-              cost заметно выше;
-        \item \textbf{максимум} --- самая консервативная оценка: агент
-              отказывается и от полезных действий и не учится решать задачу;
+        \item \textbf{минимум} --- оптимистичная оценка: один заниженный критик
+              ведёт к небезопасной траектории, cost заметно выше;
+        \item \textbf{максимум} --- консервативная оценка: агент отказывается и
+              от полезных действий, задачу не решает;
         \item \textbf{среднее} (SPOWL) --- наиболее устойчивый баланс между
-              вознаграждением и безопасностью (рис.~2.4 диссертации).
+              вознаграждением и безопасностью.
     \end{itemize}
     \centering
-    \includegraphics[height=0.47\textheight]{qa/qa_spowl_aggregation}
+    \includegraphics[height=0.72\textheight]{qa/qa_spowl_aggregation}
 \end{frame}
 
 \qaQuestion{Гаврилов Д.А.}{2}{%
@@ -159,19 +208,21 @@
     \vspace{-0.3em}
     \begin{columns}[T,onlytextwidth]
         \begin{column}{0.48\textwidth}
-            \begin{block}{Модель объекта управления}
+            \begin{block}{Должны быть известны}
+                Модель объекта управления:
                 \[
                     \dot{x} = f(x) + g(x)\,u
                 \]
+                Явный вид функции штрафов $c(x, u)$
             \end{block}
         \end{column}
         \begin{column}{0.48\textwidth}
             \begin{block}{Барьерная функция}
                 \[
-                    \mathcal{C} = \{x : h(x) \ge 0\},
+                    \underbrace{\mathcal{C} = \{x : h(x) \ge 0\}}_{\text{безопасное множество}}
                 \]
                 \[
-                    \sup_{u \in U}\big[\nabla h(x)\,(f(x) + g(x)u)\big]
+                    \nabla h(x)\,\big(f(x) + g(x)u\big)
                     \ge -\alpha\big(h(x)\big)
                 \]
             \end{block}
@@ -220,24 +271,57 @@
     для каждого из них необходимо контролировать собственный допустимый
     уровень риска?}
 
-\begin{frame}[noframenumbering]{Ответ на вопрос 1. Котенко И.В.}
-    \begin{itemize}
-        \item Методы на основе функции Лагранжа естественно обобщаются на
-              несколько ограничений: каждому виду нарушений соответствует свой
-              сигнал штрафа $c_i$ (превышение скорости, приближение к стенам
-              и~т.\,д.) и свой бюджет $d_i$.
-        \item Для каждого ограничения вводится свой множитель Лагранжа
-              $\lambda_i$ и свой критик штрафов $Q^{c_i}$.
-    \end{itemize}
-    \begin{block}{}
+\begin{frame}[noframenumbering,shrink=5]{Ответ на вопрос 1. Котенко И.В.}
+    \setbeamerfont{block title}{size=\small}
+    \footnotesize
+    Каждому ограничению --- свой сигнал штрафа и свой бюджет:
+    $c_v$ --- превышение скорости ($d_v$), $c_w$ --- приближение к стенам
+    ($d_w$), $c_a$ --- величина управляющего воздействия ($d_a$).
+    \begin{block}{Лагранжиан с тремя ограничениями}
         \[
-            \max_{\pi}\ \min_{\lambda_i \ge 0}\
-            \mathcal{L}(\pi, \lambda)
-            = J_r(\pi) - \sum_{i=1}^{m} \lambda_i \big(J_{c_i}(\pi) - d_i\big),
-            \qquad
+            \max_{\pi}\ \min_{\lambda_v,\lambda_w,\lambda_a \ge 0}\
+            J_r(\pi)
+            - \underbrace{\lambda_v\big(J_{c_v}(\pi) - d_v\big)}_{\text{бюджет на скорость}}
+            - \underbrace{\lambda_w\big(J_{c_w}(\pi) - d_w\big)}_{\text{бюджет на расстояние до стен}}
+            - \underbrace{\lambda_a\big(J_{c_a}(\pi) - d_a\big)}_{\text{бюджет на действие}},
+            \quad
             J_{c_i}(\pi) = \mathbb{E}_\pi\Big[\sum_t \gamma^t c_i(s_t, a_t)\Big]
         \]
     \end{block}
+    \begin{columns}[T,onlytextwidth]
+        \begin{column}{0.49\textwidth}
+            \begin{block}{SG-Safe и ITES: тот же лагранжиан}
+                Вместо одного критика штрафов --- \textbf{три}:
+                $Q^{c_v}$, $Q^{c_w}$, $Q^{c_a}$, и три множителя:
+                \[
+                    L(\theta,\lambda) = \mathbb{E}\Big[\alpha'\log\pi_\theta
+                    - Q_r + \lambda_v Q^{c_v} + \lambda_w Q^{c_w}
+                    + \lambda_a Q^{c_a}\Big],
+                \]
+                \[
+                    \lambda_i \leftarrow
+                    \big[\lambda_i + \eta\,(Q^{c_i} - d_i)\big]_{+},
+                    \quad i \in \{v, w, a\}.
+                \]
+                SG-Safe --- в безопасной стратегии; ITES --- на верхнем уровне
+                ($Q^h_{c_i}(s, s_g, g)$), у модели штрафов $C_M$ три выхода.
+            \end{block}
+        \end{column}
+        \begin{column}{0.49\textwidth}
+            \begin{block}{SPOWL: меняется планирование}
+                Для каждой кандидатной траектории --- оценка по каждому
+                ограничению:
+                \[
+                    J^{c_i}_M = \sum_{k=0}^{H-1}\gamma_c^k\,\hat{c}_{i,t+k}
+                    + \gamma_c^H\,\hat{Q}^{c_i}_{\mathrm{agg}}(z_{t+H}, a_{t+H}).
+                \]
+                Допустимы траектории с $J^{c_i}_M \le d^{\,i}_c$ для всех $i$,
+                из них выбирается лучшая по вознаграждению. Модель мира
+                предсказывает три штрафа и три ансамбля $\hat{Q}^{c_i}$,
+                у каждого ограничения свой адаптивный порог.
+            \end{block}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \qaQuestion{Котенко И.В.}{2}{%
@@ -247,16 +331,18 @@
     и оценке безопасности модели нельзя в достаточной степени доверять? Какие
     механизмы могут использоваться в такой ситуации для ограничения риска?}
 
-\begin{frame}[noframenumbering,shrink=5]{Ответ на вопрос 2. Котенко И.В.}
-    \small
-    \begin{columns}[T,onlytextwidth]
-        \begin{column}{0.48\textwidth}
+\begin{frame}[noframenumbering]{Ответ на вопрос 2. Котенко И.В.}
+    \footnotesize
+    \begin{columns}[c,onlytextwidth]
+        \begin{column}{0.42\textwidth}
             \begin{itemize}
                 \item В SPOWL уже используется ансамбль функций будущих
-                      накопленных штрафов. Кроме агрегации можно анализировать
-                      \textbf{расхождение прогнозов}: большой разброс указывает
-                      на недостаток данных в этой области.
-                \item Аналогично в ITES модель мира --- ансамбль нейронных сетей.
+                      накопленных штрафов: можно анализировать
+                      \textbf{расхождение прогнозов} --- большой разброс
+                      указывает на недостаток данных.
+                \item В ITES, как и в SG-Safe, такой механизм не
+                      предусмотрен. В ITES его можно добавить аналогично:
+                      модель мира там --- ансамбль нейронных сетей.
                 \item Дополнительно --- расстояние от текущего состояния до
                       состояний обучающей выборки.
                 \item При высокой неопределённости: ограничить исследование,
@@ -265,9 +351,9 @@
                       стратегии.
             \end{itemize}
         \end{column}
-        \begin{column}{0.5\textwidth}
+        \begin{column}{0.56\textwidth}
             \centering
-            \includegraphics[width=\linewidth]{qa/qa_spowl_ensemble}
+            \includegraphics[width=\linewidth,height=0.86\textheight,keepaspectratio]{qa/qa_spowl_ensemble}
         \end{column}
     \end{columns}
 \end{frame}
@@ -340,8 +426,8 @@
         SafeDreamer    & 0.099 & 0 & 13 & \textbf{0.170} & 0 & 216 & \textbf{0.034} & 0 & 6.7 \\
         CUP            & 0.107 & 0 & 6.8 & 0.229 & 0 & 103.5 & 0.437 & 0.01 & 46.1 \\
         FOCOPS         & 0.190 & 0 & 19.4 & 0.210 & 0 & 141 & 0.453 & 0 & 55.8 \\
-        PPOLag         & 0.187 & 0.2 & 41.2 & --- & 0 & 105 & --- & 0 & 51.3 \\
-        HRAC-LAG       & 0.182 & --- & --- & 0.351 & --- & --- & 0.217 & --- & --- \\
+        PPOLag         & 0.187 & 0.2 & 41.2 & 0.204 & 0 & 105 & 0.509 & 0 & 51.3 \\
+        HRAC-LAG       & 0.182 & 0.72 & 53.3 & 0.351 & 0.30 & 269.8 & 0.217 & 0.09 & 33.7 \\
         \bottomrule
     \end{tabular}
 
@@ -350,12 +436,15 @@
     \small
     \begin{itemize}
         \item На C-shape у ITES наименьшее $\rho$ при наибольшей SR; на
-              W-shape $\rho$ на уровне SafeDreamer; на Pusher $\rho$ выше, но
-              базовые методы задачу не решают (SR $\le 0.01$).
-        \item Начальные шаги для обучения модели мира в $\rho$ ITES
-              \textbf{не входят} (отдельный счётчик). Warm-up --- обычная
-              практика для model-based методов; у SafeDreamer начальные шаги
-              в $\rho$ входят.
+              W-shape $\rho$ на уровне SafeDreamer и вдвое ниже, чем у
+              HRAC-LAG при близкой SR; на Pusher $\rho$ выше, но базовые
+              методы задачу почти не решают (SR $\le 0.09$).
+        \item \textbf{С учётом начальных шагов} для обучения модели мира
+              (10\,000 на SafeAntMaze, 60\,000 на SafePusher; оценка сверху ---
+              нарушение на каждом шаге) $\rho$ ITES составляет не более
+              $0.082$ / $0.187$ / $0.439$, выводы не меняются. Warm-up ---
+              обычная практика для model-based методов, в том числе
+              SafeDreamer.
     \end{itemize}
 \end{frame}
 
@@ -387,6 +476,36 @@
             + \underbrace{\gamma_c^H\,\hat{Q}^c_{\mathrm{agg}}(z_{t+H}, a_{t+H})}_{\text{продолжение стратегией},\ a_{t+H}\sim\pi}
         \]
     \end{block}
+    \begin{columns}[T,onlytextwidth]
+        \begin{column}{0.49\textwidth}
+            \begin{block}{Background-стратегия $\pi$}
+                \vspace{-0.6em}
+                \[
+                    \max_{\pi}\ \mathbb{E}\Big[\hat{Q}(z_t, \pi(z_t))
+                    + \beta\,\mathcal{H}\big(\pi(\cdot\,|\,z_t)\big)\Big]
+                \]
+                \vspace{-1.2em}
+                \[
+                    \text{при}\ \ \mathbb{E}\big[\hat{Q}^c(z_t, \pi(z_t))\big] \le b,
+                    \quad b = 0.1
+                \]
+                (расширенный лагранжиан)
+            \end{block}
+        \end{column}
+        \begin{column}{0.49\textwidth}
+            \begin{block}{Выбор действия}
+                \vspace{-0.6em}
+                \[
+                    a_{\mathrm{env}} =
+                    \begin{cases}
+                        a_{\mathrm{plan}}, & \hat{Q}(z_t, a_{\mathrm{plan}}) \ge \hat{Q}(z_t, \pi(z_t)) \\
+                                           & \text{и}\ \hat{Q}^c(z_t, a_{\mathrm{plan}}) \le \hat{Q}^c(z_t, \pi(z_t)), \\
+                        \pi(z_t),          & \text{иначе}
+                    \end{cases}
+                \]
+            \end{block}
+        \end{column}
+    \end{columns}
     \begin{itemize}
         \item \textbf{Бюджет.} PPOLag, CPO, CVPO не поддерживают адаптивное
               изменение бюджета, для этого нужен отдельный механизм; SPOWL
@@ -559,7 +678,31 @@
     критерии, которые его определяют.}
 
 \begin{frame}[noframenumbering]{Ответ на вопрос 1. Мещеряков Р.В.}
-    \qaTodo
+    \small
+    \begin{itemize}
+        \item Безопасность формализуется через марковский процесс принятия
+              решений с ограничениями (CMDP): кроме вознаграждения вводятся
+              функция штрафа $c$ и допустимый бюджет нарушений $d$.
+    \end{itemize}
+    \begin{block}{}
+        \[
+            \max_{\pi}\ J_r(\pi) = \mathbb{E}_\pi\Big[\sum_t \gamma^t r(s_t, a_t)\Big]
+            \quad \text{при условии} \quad
+            J_c(\pi) = \mathbb{E}_\pi\Big[\sum_t \gamma^t c(s_t, a_t)\Big] \le d
+        \]
+    \end{block}
+    \begin{itemize}
+        \item Критерии безопасности в экспериментах:
+              \begin{itemize}
+                  \item накопленный штраф за эпизод (Cost, MTSC);
+                  \item частота столкновений (CR);
+                  \item средний штраф за шаг обучения $\rho$ --- безопасность
+                        самого процесса исследования.
+              \end{itemize}
+        \item Безопасность оценивается совместно с успешностью выполнения
+              задачи (SR): агент, который не движется, получает минимальные
+              штрафы, но не решает задачу.
+    \end{itemize}
 \end{frame}
 
 \qaQuestion{Мещеряков Р.В.}{2}{%
@@ -603,7 +746,26 @@
     подцели?}
 
 \begin{frame}[noframenumbering]{Ответ на вопрос 4. Мещеряков Р.В.}
-    \qaTodo
+    \small
+    \begin{itemize}
+        \item В ITES эта проблема частично учитывается уже при обучении
+              верхнеуровневой стратегии:
+              \begin{itemize}
+                  \item \textbf{сеть смежности} ограничивает выбор подцелей
+                        состояниями, потенциально достижимыми низкоуровневой
+                        стратегией за $k$ шагов;
+                  \item \textbf{модель штрафов} оценивает безопасность самой
+                        подцели, а \textbf{верхнеуровневый критик штрафов}
+                        $Q^h_c$ --- ожидаемые накопленные нарушения при её
+                        выборе.
+              \end{itemize}
+        \item Поэтому метод стремится избегать и опасных, и трудно достижимых
+              подцелей. Однако строгой гарантии безопасной достижимости
+              каждой подцели эти механизмы не дают.
+        \item Развитие --- \textbf{адаптивное перепланирование}: если агент не
+              приближается к подцели или модель мира прогнозирует высокий риск
+              её достижения, верхний уровень досрочно формирует новую подцель.
+    \end{itemize}
 \end{frame}
 
 % ---------------------------------------------------------------------------
