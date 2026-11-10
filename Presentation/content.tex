@@ -41,7 +41,7 @@
             \end{block}
         \end{column}
         \begin{column}{0.41\textwidth}
-            \begin{alertblock}{Риски исследования}
+            \begin{alertblock}{Проблемы исследования в RL}
                 Случайное исследование в реальной среде может приводить к:
                 \begin{itemize}
                     \item столкновениям;
@@ -211,12 +211,14 @@
     \vfill
 \end{frame}
 
+{\setbeamerfont{block title}{size=\small}%
+\setbeamerfont{block title alerted}{size=\small}%
 \begin{frame}[shrink=12]{Основные подходы к безопасному обучению с подкреплением}
     \footnotesize
     \setlength{\abovedisplayskip}{0.3em}
     \setlength{\belowdisplayskip}{0.3em}
     \begin{columns}[T,onlytextwidth]
-        \begin{column}{0.49\textwidth}
+        \begin{column}{0.32\textwidth}
             \begin{block}{Методы оптимизации стратегии с ограничениями}
                 \scriptsize
                 Методы применимы для произвольной CMDP-задачи, но не
@@ -248,7 +250,7 @@
             \end{block}
         \end{column}
 
-        \begin{column}{0.49\textwidth}
+        \begin{column}{0.32\textwidth}
             \begin{block}{Методы на основе фильтрации действий}
                 \scriptsize
                 \textbf{Метод на основе барьерной функции}
@@ -272,77 +274,52 @@
                 Требуется модель объекта управления \(\dot{s} = f(s) + g(s)a\).
             \end{block}
         \end{column}
-    \end{columns}
 
-    \vfill
-    \footnotetext[1]{Источники: Ray et al., 2019; Stooke et al., 2020; Ames et al., 2017; Dalal et al., 2018.}
-\end{frame}
+        \begin{column}{0.32\textwidth}
+            \begin{block}{Методы на основе модели мира}
+                \scriptsize
+                Используют синтетический опыт и планирование.
 
-\begin{frame}[shrink=10]{Методы на основе модели мира}
-    \footnotesize
-    \setlength{\itemsep}{0pt}
-    \begin{columns}[T,onlytextwidth]
-        \begin{column}{0.52\textwidth}
-            \begin{block}{Методы, использующие синтетический опыт и планирование}
                 \textbf{SafeDreamer}
 
-                \vspace{-0.1em}
                 Модель мира: \(g_\theta\)~--- декодер,
                 \(f_\theta\)~--- динамика, \(r_\theta\)~--- награда,
-                \(c_\theta\)~--- штраф (\(f,r,c\) на входе берут \(z_t\)):
+                \(c_\theta\)~--- штраф:
                 \[
                     \hat{s}_t=g_\theta(z_t),\;
-                    \hat{z}_{t+1}=f_\theta(z_t,a_t),\;
+                    \hat{z}_{t+1}=f_\theta(z_t,a_t),
+                \]
+                \[
                     \hat r_t=r_\theta(z_t,a_t),\;
                     \hat c_t=c_\theta(z_t,a_t).
                 \]
-
                 Планирование (CEM):
-                \vspace{-0.15em}
                 \begin{enumerate}
                     \setlength{\itemsep}{0pt}
                     \item \(a_t \sim \mathcal{N}^{t}(\mu_a^{t}, \sigma_a^{t})\),
                     \(t = 0, \ldots, H-1\);\\
-                    \(\tau=(z_t,a_t,\ldots,z_{t+H},a_{t+H}),\;
-                    z_{t+1}=f(z_t,a_t)\).
+                    \(\tau=(z_t,a_t,\ldots,z_{t+H})\),
+                    \(z_{t+1}=f(z_t,a_t)\);
                     \item \(J_{\mathrm{local}}(\tau^{(i)})
-                    =\sum\limits_{t=0}^{H-1}\gamma^t\hat c_t^{(i)}\),
+                    =\sum_{t=0}^{H-1}\gamma^t\hat c_t^{(i)}\),\\
                     \(\mathcal{T}_{\mathrm{safe}}
                     =\bigl\{i:J_{\mathrm{local}}(\tau^{(i)})\leq d\bigr\}\);
                     \item \(J_{\mathrm{local}}^R(\tau^{(i)})
-                    =\sum\limits_{t=0}^{H-1}\gamma^t\hat r_t^{(i)}\),
+                    =\sum_{t=0}^{H-1}\gamma^t\hat r_t^{(i)}\),\\
                     \(\mathcal{T}_{\mathrm{elite}}
                     =\mathrm{Top}_k\bigl(\mathcal{T}_{\mathrm{safe}},\,J_{\mathrm{local}}^R\bigr)\).
                 \end{enumerate}
-
-                \vspace{0.2em}
-                Стратегия (обучение в модели мира):
-                \[
-                    \mathcal{L}(\pi,\lambda)
-                    =J_R(\pi)-\lambda\bigl(J_C(\pi)-d\bigr).
-                \]
+                Стратегия обучается в модели мира:
+                \(\mathcal{L}(\pi,\lambda)=J_R(\pi)-\lambda\bigl(J_C(\pi)-d\bigr)\).
             \end{block}
-        \end{column}
-        \begin{column}{0.44\textwidth}
-            \begin{block}{Преимущества}
-                \begin{itemize}
-                    \item позволяют генерировать дополнительный синтетический опыт;
-                    \item позволяют планировать в рамках модели мира.
-                \end{itemize}
-            \end{block}
-
-            \begin{alertblock}{Текущие проблемы SafeDreamer}
-                \begin{itemize}
-                    \item Смещённая цель (\textit{miss objective}): декодер
-                    предсказывает лишнюю информацию.
-                    \item Безопасность траекторий оценивается только при помощи
-                    \(c_\theta\), то есть на коротком горизонте.
-                \end{itemize}
-            \end{alertblock}
         \end{column}
     \end{columns}
-    \footnotetext[1]{Источники: Huang et al., 2024; As et al., 2022; Jayant et al., 2022.}
+
+    \vfill
+    {\tiny Источники: Ray et al., 2019; Stooke et al., 2020; Ames et al., 2017;
+    Dalal et al., 2018; Huang et al., 2024; As et al., 2022; Jayant et al., 2022.\par}
 \end{frame}
+}
 
 \begin{frame}[shrink=8]{Проблема безопасного исследования в задачах с большим горизонтом}
     \begin{columns}[T,onlytextwidth]
@@ -361,6 +338,16 @@
             исследование ухудшается $\rightarrow$
             переход на задачи с большим горизонтом $\rightarrow$
             робот стоит на месте.}
+
+            \vspace{0.35em}
+            \begin{alertblock}{Текущие проблемы SafeDreamer}
+                \begin{itemize}
+                    \item Смещённая цель (\textit{miss objective}): декодер
+                    предсказывает лишнюю информацию.
+                    \item Безопасность траекторий оценивается только при помощи
+                    \(c_\theta\), то есть на коротком горизонте.
+                \end{itemize}
+            \end{alertblock}
         \end{column}
 
         \begin{column}{0.55\textwidth}
@@ -881,26 +868,26 @@
 
 \section{Безопасная иерархия: ITES}
 
-\begin{frame}[shrink=12]{ITES: иерархическая структура и функции потерь}
-    \begin{block}{Развитие иерархического безопасного обучения}
-        \small
-        В SG-Safe подцели направляют исследование, однако их безопасность явно
-        не гарантируется. ITES решает более сильную задачу и контролирует
-        безопасность всей иерархии: как при выборе промежуточных подцелей, так
-        и при их достижении.
-    \end{block}
-    \vspace{-0.2em}
+\begin{frame}[shrink=14]{ITES: генерация безопасных подцелей на верхнем уровне}
     \begin{columns}[T,onlytextwidth]
-        \begin{column}{0.44\textwidth}
+        \begin{column}{0.47\textwidth}
             \begin{block}{Иерархия}
-                \footnotesize
-                \setlength{\abovedisplayskip}{3pt}
-                \setlength{\belowdisplayskip}{3pt}
+                \small
                 \begin{itemize}
                     \item \(\pi^h_{\theta_h}(s_g\mid s,g)\) генерирует подцель;
                     \item \(\pi^l_{\theta_l}(a\mid s,s_g)\) достигает подцель.
                 \end{itemize}
-                Верхнеуровневый критик вознаграждения
+                Задача: обеспечить безопасность
+                \(s_g \sim \pi^h_{\theta_h}(s_g \mid s,g)\).
+            \end{block}
+
+            \vspace{0.15em}
+            \begin{block}{Исходные компоненты HRAC}
+                \footnotesize
+                \setlength{\abovedisplayskip}{3pt}
+                \setlength{\belowdisplayskip}{3pt}
+                Критик вознаграждения \(Q^h\) --- максимизирует
+                вознаграждение при решении задачи:
                 \[
                 Q^h_{\theta_{qh}}(s,s_g,g)=
                 \mathbb{E}\!\left[
@@ -908,42 +895,32 @@
                 \,\middle|\,s_0=s,\ s_{g,0}=s_g,\ g
                 \right].
                 \]
-                Обучает эмбеддинги целей
+                Функция смежности \(L_{adj}\) обучает эмбеддинги \(\psi\) и
+                удерживает подцели в пределах \(k\) шагов:
                 \[
                 \begin{aligned}
                 L_{adj}=\mathbb{E}\big[&
                 l\max(\|\psi(s_i)-\psi(s_j)\|-\epsilon,0)\\
-                &+(1-l)\max(\epsilon+\delta\\
-                &\quad-\|\psi(s_i)-\psi(s_j)\|,0)\big].
+                &+(1-l)\max(\epsilon+\delta-\|\psi(s_i)-\psi(s_j)\|,0)\big].
                 \end{aligned}
                 \]
             \end{block}
         \end{column}
-        \begin{column}{0.53\textwidth}
-            \begin{block}{Функция потерь HRAC}
-                \[
-                L^h=-Q^h_{\theta_{qh}}(s,s_g,g)
-                +\beta^h_{adj}L_{adj}(s,s_g).
-                \]
-            \end{block}
-            \small
-            \(Q^h\) способствует максимизации вознаграждения от подцели для
-            решения задачи.\\
-            Член \(L_{adj}\) способствует генерации подцелей ровно на \(k\)
-            шагов вперед.
-        \end{column}
-    \end{columns}
-\end{frame}
-
-\begin{frame}[shrink=8]{Безопасность на верхнем уровне: генерация безопасных подцелей}
-    \begin{columns}[T,onlytextwidth]
-        \begin{column}{0.47\textwidth}
-            \begin{block}{Задача}
+        \begin{column}{0.50\textwidth}
+            \begin{block}{Функция потерь верхнего уровня}
                 \small
-                обеспечить безопасность
-                \(s_g \sim \pi^h_{\theta_h}(s_g \mid s,g)\).
+                \[
+                \begin{aligned}
+                L^h={}&-Q^h_{\theta_{qh}}(s,s_g,g)
+                +\beta^h_{adj}L_{adj}(s,s_g)\\[0.3em]
+                &+\fcolorbox{red}{white}{\(\displaystyle
+                -\beta^h_{safe}C_M(s_g,s)
+                +\lambda Q^h_c(s,s_g,g)\)}.
+                \end{aligned}
+                \]
+                \centering
+                \scriptsize\textcolor{red}{Компоненты, отвечающие за безопасность}
             \end{block}
-
             \vspace{0.15em}
             \begin{block}{Два сигнала безопасности}
                 \small
@@ -963,27 +940,6 @@
                 \right].
                 \]
             \end{block}
-        \end{column}
-        \begin{column}{0.50\textwidth}
-            \begin{block}{Функция потерь ITES на верхнем уровне}
-                \small
-                \[
-                \begin{aligned}
-                L^h={}&-Q^h_{\theta_{qh}}(s,s_g,g)
-                +\beta^h_{adj}L_{adj}(s,s_g)\\[0.3em]
-                &+\fcolorbox{red}{white}{\(\displaystyle
-                -\beta^h_{safe}C_M(s_g,s)
-                +\lambda Q^h_c(s,s_g,g)\)}.
-                \end{aligned}
-                \]
-                \centering
-                \scriptsize\textcolor{red}{Компоненты, отвечающие за безопасность}
-            \end{block}
-            \small
-            \begin{itemize}
-                \item \(C_M\) направляет подцель в безопасную область;
-                \item \(Q^h_c\) учитывает безопасность достижения подцелей.
-            \end{itemize}
         \end{column}
     \end{columns}
 \end{frame}
