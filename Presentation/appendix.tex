@@ -1,3 +1,69 @@
 % Резервные слайды будут добавляться сюда по мере подготовки доклада.
 
 \input{Presentation/qa}  % Вопросы членов диссертационного совета и ответы
+
+% ---------------------------------------------------------------------------
+% Дополнительные материалы
+% ---------------------------------------------------------------------------
+
+\section{Дополнительные материалы}
+
+\begin{frame}[plain,noframenumbering]
+    \centering
+    \vfill
+    {\LARGE\color{MIPTBlue}\textbf{Дополнительные материалы}}
+    \vfill
+\end{frame}
+
+\begin{frame}[noframenumbering]{SPOWL: локальная и глобальная оценки штрафов}
+    \centering
+    \includegraphics[height=0.76\textheight]{spowl_local_global_all_thresholds}
+\end{frame}
+
+\begin{frame}[noframenumbering]{SG-Safe: Решение проблемы безопасного исследования в задачах с большим горизонтом через подцели}
+    \centering
+    \includegraphics[width=0.72\linewidth]{method_scheme_3}
+
+    \vspace{0.5em}
+    {\scriptsize
+    Промежуточные подцели декомпозируют задачу, направляют исследование
+    и упрощают достижение цели; при обучении --- дополнительный сигнал,
+    при исполнении --- только безопасная стратегия.}
+\end{frame}
+
+\begin{frame}[noframenumbering]{ITES: абляция компонентов безопасности}
+    \centering
+    {\setlength{\fboxsep}{0.55em}%
+    \fcolorbox{red}{red!5}{%
+        \begin{minipage}{0.82\linewidth}
+            \footnotesize
+            \textbf{Влияние безопасных подцелей на обучение}
+
+            Отсутствие безопасности в подцелях приводит к такому же Success Rate,
+            но гораздо большим нарушениям Cost (зелёный график).
+        \end{minipage}%
+    }}
+
+    \vspace{0.3em}
+    \includegraphics[width=0.72\linewidth]{Ablation_SafeAntMazeCshape_3}
+\end{frame}
+
+\begin{frame}[shrink=5,noframenumbering]{SG-Safe: время генерации действий при инференсе}
+    \centering
+    \scriptsize
+    POLAMP (Level~1).
+    PT~--- время планирования, ET~--- время генерации действия при инференсе
+    (action generation time).
+
+    \vspace{0.35em}
+    \begin{tabular}{lcc}
+    \toprule
+    Method & PT$\downarrow$, s & ET$\downarrow$, s \\
+    \midrule
+    SG-Safe & $0$ & $9\cdot 10^{-3}$ \\
+    ITES & -- & $1.8\cdot 10^{-2}$ \\
+    L-RRT & $10.4$ & $9\cdot 10^{-3}$ \\
+    SPOWL & -- & $4.0\cdot 10^{-2}$ \\
+    \bottomrule
+    \end{tabular}
+\end{frame}
