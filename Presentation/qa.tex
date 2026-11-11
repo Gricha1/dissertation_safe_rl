@@ -220,6 +220,9 @@
 
 \begin{frame}[noframenumbering,shrink=5]{Ответ на вопрос 3. Райгородский А.М.}
     \small
+    \textbf{В каких случаях использование иерархической структуры может оказаться избыточным}
+
+    \vspace{0.3em}
     \begin{itemize}
         \item При коротком горизонте и плотном вознаграждении (например, за
               приближение к цели) одноуровневая стратегия получает достаточно
@@ -289,6 +292,9 @@
 
 \begin{frame}[noframenumbering]{Ответ на вопрос 1. Гаврилов Д.А.}
     \footnotesize
+    {\small\textbf{Как способ агрегации ансамбля влияет на баланс между недооценкой и консервативным поведением}\par}
+
+    \vspace{0.3em}
     \begin{itemize}
         \item \textbf{минимум} --- оптимистичная оценка: один заниженный критик
               ведёт к небезопасной траектории, cost заметно выше;
@@ -298,7 +304,7 @@
               вознаграждением и безопасностью.
     \end{itemize}
     \centering
-    \includegraphics[height=0.72\textheight]{qa/qa_spowl_aggregation}
+    \includegraphics[height=0.64\textheight]{qa/qa_spowl_aggregation}
 \end{frame}
 
 \qaQuestion{Гаврилов Д.А.}{2}{%
@@ -310,6 +316,9 @@
 
 \begin{frame}[noframenumbering,shrink=5]{Ответ на вопрос 2. Гаврилов Д.А.}
     \small
+    \textbf{Как можно расширить предложенные методы на задачи, где ограничения должны выполняться на каждом шаге}
+
+    \vspace{0.3em}
     \begin{itemize}
         \item \textbf{Безопасная итоговая стратегия:} адаптивно уменьшать
               бюджет штрафов $d$ до нуля в ходе обучения.
@@ -358,6 +367,9 @@
     удалённых целей с соблюдением ограничений безопасности?}
 
 \begin{frame}[noframenumbering]{Ответ на вопрос 3. Гаврилов Д.А.}
+    \textbf{Каким образом информация от подцелей переносится в итоговую безопасную стратегию в SG-Safe}
+
+    \vspace{0.4em}
     \begin{itemize}
         \item Информация сохраняется непосредственно в весах нейронной сети
               стратегии.
@@ -483,6 +495,9 @@
 
 \begin{frame}[noframenumbering]{Ответ на вопрос 3. Котенко И.В.}
     \small
+    \textbf{Как будут изменяться оценки безопасности при наличии ошибок или неполноты входных наблюдений}
+
+    \vspace{0.3em}
     \begin{itemize}
         \item Модели, обученные без шума, при зашумлённых наблюдениях работают
               плохо. На модели мира ошибка влияет ещё сильнее, так как она
@@ -494,7 +509,7 @@
               $0.27$ до $0.14$ при исполнении в зашумлённой среде.
     \end{itemize}
     \centering
-    \includegraphics[width=0.9\linewidth]{qa/qa_sgsafe_noise}
+    \includegraphics[width=0.9\linewidth,height=0.42\textheight,keepaspectratio]{qa/qa_sgsafe_noise}
 \end{frame}
 
 % ---------------------------------------------------------------------------
@@ -751,11 +766,15 @@
     \end{itemize}
     \vspace{-0.6em}
     \[
-        \mathbb{E}_{n}\big[c(s_n)\big]
-        = \frac{1}{k-1}\sum_{j=1}^{k-1} c(s_j)
-        \quad\Longrightarrow\quad
-        \arg\min\ \mathbb{E}_n\big[c(s_n)\big]
-        = \arg\min \sum_{j=1}^{k-1} c(s_j).
+        \begin{aligned}
+            J(\pi)
+            &= \mathbb{E}_{\tau\sim P_\pi,\,n}\big[c(s_n)\big]\\
+            &= \frac{1}{k-1}\sum_{j=1}^{k-1}
+               \mathbb{E}_{\tau\sim P_\pi}\big[c(s_j)\big]\\
+            &= \frac{1}{k-1}
+               \mathbb{E}_{\tau\sim P_\pi}
+               \left[\sum_{j=1}^{k-1} c(s_j)\right].
+        \end{aligned}
     \]
     \vspace{-0.6em}
     \begin{itemize}
