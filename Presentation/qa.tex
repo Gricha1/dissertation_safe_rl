@@ -545,12 +545,9 @@
               W-shape $\rho$ на уровне SafeDreamer и вдвое ниже, чем у
               HRAC-LAG при близкой SR; на Pusher $\rho$ выше, но базовые
               методы задачу почти не решают (SR $\le 0.09$).
-        \item \textbf{С учётом начальных шагов} для обучения модели мира
-              (10\,000 на SafeAntMaze, 60\,000 на SafePusher; оценка сверху ---
-              нарушение на каждом шаге) $\rho$ ITES составляет не более
-              $0.082$ / $0.187$ / $0.439$, выводы не меняются. Warm-up ---
-              обычная практика для model-based методов, в том числе
-              SafeDreamer.
+        \item \textbf{Первые 30\,000 случайных шагов также учитывались:}
+              даже если считать нарушение на каждом из них, $\rho$ ITES
+              составляет не более $0.089$ / $0.203$ / $0.431$.
     \end{itemize}
 \end{frame}
 
@@ -573,32 +570,50 @@
     \end{block}
 \end{frame}
 
-\begin{frame}[noframenumbering,shrink=5]{Ответ на вопрос 2. Николенко С.И.}
+\begin{frame}[noframenumbering,shrink=8]{Ответ на вопрос 2. Николенко С.И.}
     \small
-    \begin{block}{Оценка безопасности плана: модель мира + терминальная оценка}
-        \[
-            J^{c,\mathrm{global}}_M(z_t, a_{t:t+H})
-            = \underbrace{\sum_{i=0}^{H-1}\gamma_c^i\,\hat{c}_{t+i}}_{\text{план, модель мира}}
-            + \underbrace{\gamma_c^H\,\hat{Q}^c_{\mathrm{agg}}(z_{t+H}, a_{t+H})}_{\text{продолжение стратегией},\ a_{t+H}\sim\pi}
-        \]
+    \begin{block}{Background-стратегия $\pi$: SAC + расширенный лагранжиан}
+        \vspace{-0.5em}
+        \begin{columns}[T,onlytextwidth]
+            \begin{column}{0.55\textwidth}
+                \[
+                    \mathcal{L}_\pi =
+                    \mathbb{E}\Big[-\alpha\,\hat{Q}(z_t, \pi(z_t))
+                    - \beta\,\mathcal{H}\big(\pi(\cdot\,|\,z_t)\big)\Big]
+                    + \Psi(\Delta),
+                \]
+                \[
+                    \Delta = \mathbb{E}\big[\hat{Q}^c(z_t, \pi(z_t))\big] - d,
+                    \qquad d = 0.1
+                \]
+            \end{column}
+            \begin{column}{0.43\textwidth}
+                \[
+                    \Psi(\Delta) =
+                    \begin{cases}
+                        \lambda\Delta + \frac{\mu}{2}\Delta^2, & \lambda + \mu\Delta \ge 0,\\[0.2em]
+                        -\frac{\lambda^2}{2\mu}, & \text{иначе},
+                    \end{cases}
+                \]
+                \[
+                    \lambda \leftarrow \max(0,\ \lambda + \mu\Delta),
+                    \quad \mu\ \text{не убывает}
+                \]
+            \end{column}
+        \end{columns}
     \end{block}
     \begin{columns}[T,onlytextwidth]
-        \begin{column}{0.49\textwidth}
-            \begin{block}{Background-стратегия $\pi$}
+        \begin{column}{0.53\textwidth}
+            \begin{block}{Оценка безопасности плана}
                 \vspace{-0.6em}
                 \[
-                    \max_{\pi}\ \mathbb{E}\Big[\hat{Q}(z_t, \pi(z_t))
-                    + \beta\,\mathcal{H}\big(\pi(\cdot\,|\,z_t)\big)\Big]
+                    J^{c,\mathrm{global}}_M
+                    = \underbrace{\sum_{i=0}^{H-1}\gamma_c^i\,\hat{c}_{t+i}}_{\text{план, модель мира}}
+                    + \underbrace{\gamma_c^H\,\hat{Q}^c_{\mathrm{agg}}(z_{t+H}, a_{t+H})}_{\text{продолжение стратегией},\ a_{t+H}\sim\pi}
                 \]
-                \vspace{-1.2em}
-                \[
-                    \text{при}\ \ \mathbb{E}\big[\hat{Q}^c(z_t, \pi(z_t))\big] \le b,
-                    \quad b = 0.1
-                \]
-                (расширенный лагранжиан)
             \end{block}
         \end{column}
-        \begin{column}{0.49\textwidth}
+        \begin{column}{0.45\textwidth}
             \begin{block}{Выбор действия}
                 \vspace{-0.6em}
                 \[
@@ -751,7 +766,10 @@
     \end{itemize}
     \vspace{-0.3em}
     \centering
-    \includegraphics[height=0.47\textheight]{qa/qa_ites_beta_ablation}
+    \includegraphics[height=0.42\textheight]{qa/qa_ites_beta_ablation}\\[0.1em]
+    {\scriptsize Абляция на SafeAntMaze C-shape. \textbf{Для ITES выбраны
+    \(\beta^h_{safe} = 800,\ \beta^l_{safe} = 6\)} (оранжевая кривая).\\
+    Для других задач: SafePusher \(80 / 1\), Safety Gym \(10 / 0.001\).\par}
 \end{frame}
 
 \qaQuestion{Николенко С.И.}{5}{%
@@ -788,7 +806,7 @@
     В тексте диссертации следовало формализовать понятие безопасности, а также
     критерии, которые его определяют.}
 
-\begin{frame}[noframenumbering]{Ответ на вопрос 1. Мещеряков Р.В.}
+\begin{frame}[noframenumbering,shrink=12]{Ответ на вопрос 1. Мещеряков Р.В.}
     \small
     \begin{itemize}
         \item Безопасность формализуется через марковский процесс принятия
@@ -800,6 +818,12 @@
             \max_{\pi}\ J_r(\pi) = \mathbb{E}_\pi\Big[\sum_t \gamma^t r(s_t, a_t)\Big]
             \quad \text{при условии} \quad
             J_c(\pi) = \mathbb{E}_\pi\Big[\sum_t \gamma^t c(s_t, a_t)\Big] \le d
+        \]
+        В среде задан бюджет $d_{env}$: \textbf{безопасной считается стратегия,
+        у которой суммарный накопленный штраф за эпизод не превышает}
+        $d_{env}$:
+        \[
+            \mathbb{E}_\pi\Big[\sum_t c(s_t, a_t)\Big] \le d_{env}.
         \]
     \end{block}
     \begin{itemize}
