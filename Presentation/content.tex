@@ -325,6 +325,16 @@
     \begin{columns}[T,onlytextwidth]
         \begin{column}{0.43\textwidth}
             \footnotesize
+            \begin{alertblock}{Текущие проблемы SafeDreamer}
+                \begin{itemize}
+                    \item Смещённая цель (\textit{miss objective}): декодер
+                    предсказывает лишнюю информацию.
+                    \item Безопасность траекторий оценивается только при помощи
+                    \(c_\theta\), то есть на коротком горизонте.
+                \end{itemize}
+            \end{alertblock}
+
+            \vspace{0.35em}
             \begin{block}{Признаки большого горизонта}
             \begin{itemize}
                 \item большая последовательность шагов до цели;
@@ -338,16 +348,6 @@
             исследование ухудшается $\rightarrow$
             переход на задачи с большим горизонтом $\rightarrow$
             робот стоит на месте.}
-
-            \vspace{0.35em}
-            \begin{alertblock}{Текущие проблемы SafeDreamer}
-                \begin{itemize}
-                    \item Смещённая цель (\textit{miss objective}): декодер
-                    предсказывает лишнюю информацию.
-                    \item Безопасность траекторий оценивается только при помощи
-                    \(c_\theta\), то есть на коротком горизонте.
-                \end{itemize}
-            \end{alertblock}
         \end{column}
 
         \begin{column}{0.55\textwidth}
@@ -409,18 +409,31 @@
     \end{block}
 
     \vspace{0.3em}
-    \begin{alertblock}{Ограничения существующих бенчмарков}
-        \begin{itemize}
-            \item рассматриваются преимущественно \textbf{простые навигационные
-                  задачи};
-            \item цель часто задаётся \textbf{в структурированном виде}, а не
-                  естественным языком;
-            \item не позволяют полноценно оценивать \textbf{понимание языка,
-                  grounding и память агента};
-            \item недостаточно отражают сложные динамические среды, требующие
-                  длинных последовательностей действий.
-        \end{itemize}
-    \end{alertblock}
+    \begin{columns}[T,onlytextwidth]
+        \begin{column}{0.60\textwidth}
+            \begin{alertblock}{Ограничения существующих бенчмарков}
+                \begin{itemize}
+                    \item рассматриваются преимущественно \textbf{простые
+                          навигационные задачи};
+                    \item цель часто задаётся \textbf{в структурированном
+                          виде}, а не естественным языком;
+                    \item не позволяют полноценно оценивать \textbf{понимание
+                          языка, grounding и память агента};
+                    \item недостаточно отражают сложные динамические среды,
+                          требующие длинных последовательностей действий.
+                \end{itemize}
+            \end{alertblock}
+        \end{column}
+        \begin{column}{0.37\textwidth}
+            \centering
+            \scriptsize
+            \textbf{Safety Gym}\\[0.15em]
+            \includegraphics[height=0.22\textheight]{safety_gym_point}\hspace{0.3em}%
+            \includegraphics[height=0.22\textheight]{safety_gym_car}\\[0.35em]
+            \textbf{MiniGrid}\\[0.15em]
+            \includegraphics[height=0.22\textheight]{minigrid_lava}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \begin{frame}
